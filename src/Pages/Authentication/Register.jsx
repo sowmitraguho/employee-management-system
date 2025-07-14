@@ -1,11 +1,133 @@
-import React from 'react';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import Lottie from "lottie-react";
+import registerAnimation from "@/assets/Lottifiles/register-lottie.json"; // Download from LottieFiles
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+//import { useAuth } from "@/context/AuthContext"; // Your custom AuthContext
+//import { toast } from "@/components/ui/use-toast";
+import { FcGoogle } from "react-icons/fc";
+import { FaLinkedin } from "react-icons/fa";
 
 const Register = () => {
-    return (
-        <div>
-            
+  //const { registerWithEmail, signInWithGoogle, signInWithLinkedIn } = useAuth();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  const [error, setError] = useState("");
+  //const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validatePassword = (password) => {
+    return /[A-Z]/.test(password) && /[^a-zA-Z0-9]/.test(password) && password.length >= 6;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!validatePassword(form.password)) {
+      setError("Password must be 6+ chars, include 1 capital & 1 special char.");
+      return;
+    }
+    console.log(form);
+    // try {
+    //   await registerWithEmail(form); // You must handle role inside register logic
+    //   toast({ title: "Registration successful!" });
+    //   navigate("/dashboard");
+    // } catch (err) {
+    //   setError(err.message);
+    // }
+  };
+
+  return (
+    <div className="min-h-screen max-w-7xl flex items-center justify-around bg-gray-50 dark:bg-gray-950 px-4">
+      <div className="flex-1 w-full bg-white dark:bg-gray-900 shadow-md rounded-lg border border-green-500">
+        
+
+        {/* Right Side - Register Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <h2 className="text-2xl font-bold text-center">Create an Account</h2>
+
+          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
+          <div>
+            <Label htmlFor="name">Full Name</Label>
+            <Input type="text" name="name" required onChange={handleChange} />
+          </div>
+
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input type="email" name="email" required onChange={handleChange} />
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input type="password" name="password" required onChange={handleChange} />
+          </div>
+
+          <div>
+            <Label htmlFor="role">Select Role</Label>
+            <select
+              name="role"
+              required
+              onChange={handleChange}
+              className="w-full mt-1 rounded border px-3 py-2 dark:bg-gray-800"
+            >
+              <option value="">-- Select Role --</option>
+              <option value="employee">Employee</option>
+              <option value="hr">HR</option>
+              {/* Do NOT allow Admin registration from frontend */}
+            </select>
+          </div>
+
+          <Button type="submit" className="w-full">
+            Register
+          </Button>
+
+          <div className="text-center text-sm">Or sign up with</div>
+
+          <div className="">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 mb-2"
+             // onClick={signInWithGoogle}
+            >
+              <FcGoogle size={20} /> Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+             // onClick={signInWithLinkedIn}
+            >
+              <FaLinkedin size={20} className="text-blue-700" /> LinkedIn
+            </Button>
+          </div>
+
+          <p className="text-xs text-center">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login here
+            </Link>
+          </p>
+        </form>
+      </div>
+      {/* Left Side - Lottie Animation */}
+        <div className="p-6 hidden md:flex flex-1 items-center justify-center ">
+          <Lottie animationData={registerAnimation} loop={true} className="w-80 h-80" />
         </div>
-    );
+    </div>
+  );
 };
 
 export default Register;

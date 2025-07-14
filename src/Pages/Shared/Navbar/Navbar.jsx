@@ -1,6 +1,6 @@
 import React from 'react';
 import ThemeToggle from '../../../Components/ui/ThemeToggle';
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 // import { useAuth } from "@/context/AuthContext"; // assumes AuthContext setup
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
