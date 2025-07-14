@@ -10,7 +10,7 @@ const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    console.log(prefersDark, storedTheme);
+   // console.log(prefersDark, storedTheme);
     if (storedTheme) {
       setTheme(storedTheme);
     } else {
@@ -28,12 +28,12 @@ const ThemeProvider = ({ children }) => {
       root.classList.remove("dark");
     }
     localStorage.setItem("theme", theme);
-    console.log('inside useEffect', theme);
+    //console.log('inside useEffect', theme);
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-    console.log(theme);
+    //console.log(theme);
   }
 
   if(loading) {

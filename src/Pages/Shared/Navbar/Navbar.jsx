@@ -46,7 +46,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer w-8 h-8">
                   <AvatarImage src={loggedInUser.photoURL} />
-                  <AvatarFallback>{loggedInUser.displayName[0]}</AvatarFallback>
+                  <AvatarFallback>{loggedInUser.displayName ? loggedInUser.displayName[0] : 'U'}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

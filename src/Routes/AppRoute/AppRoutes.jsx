@@ -4,6 +4,9 @@ import Home from "../../Pages/Home/Home"
 import About from "../../Pages/About/About"
 import Register from "../../Pages/Authentication/Register"
 import SignIn from "../../Pages/Authentication/SignIn"
+import Dashboard from "../../Pages/Dashboard/Dashboard"
+import PrivateRoute from "../PrivateRoute/PrivateRoute"
+import DashboardLayout from "../../Layouts/DashboardLayout/DashboardLayout"
 
 const routes = createBrowserRouter([
     {
@@ -14,6 +17,15 @@ const routes = createBrowserRouter([
             { path: "about", Component: About },
             { path: "register", Component: Register },
             { path: "login", Component: SignIn },
+        ]
+    },
+    {
+        path: '/dashboard',
+        element: <PrivateRoute>
+            <DashboardLayout/>
+        </PrivateRoute>,
+        children: [
+            {index: true, Component: Dashboard}
         ]
     }
 ])

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Lottie from "lottie-react";
@@ -9,13 +9,15 @@ import { Label } from "@/components/ui/label";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaLinkedin } from "react-icons/fa";
+import { AuthContext } from '../../Contexts/AuthContext/AuthContext';
+import Swal from 'sweetalert2';
 
 
 const SignIn = () => {
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     //const navigate = useNavigate();
-
+    const { signIn, googleSignIn, loggedInUser } = useContext(AuthContext);
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -24,14 +26,43 @@ const SignIn = () => {
         e.preventDefault();
         setError("");
 
-        // try {
-        //   await loginWithEmail(form.email, form.password);
-        //   toast({ title: "Logged in successfully!" });
-        //   navigate("/dashboard");
-        // } catch (err) {
-        //   setError("Invalid email or password.");
-        // }
+        try {
+          const result = await signIn(form.email, form.password);
+          const currentUser = result.user;
+          console.log('login page user', currentUser);
+          if (currentUser) {
+            Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "SignIn Successful!",
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+          }
+        } catch (err) {
+          setError("Invalid email or password.");
+          console.log(err.message);
+        }
     };
+    const handleGoogleSignIn = async () => {
+        setError("");
+        try {
+          const result = await googleSignIn();
+          const currentUser = result.user;
+          console.log('from register page',currentUser);
+          if (currentUser) {
+            Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "SignIn Successful!",
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+          }
+        } catch(err){
+          setError(err.message)
+        }
+      }
     return (
         <div className="p-20">
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
@@ -80,7 +111,7 @@ const SignIn = () => {
                                 type="button"
                                 variant="outline"
                                 className="w-full flex items-center justify-center gap-2"
-                            //onClick={signInWithGoogle}
+                            onClick={handleGoogleSignIn}
                             >
                                 <FcGoogle size={20} /> Google
                             </Button>
