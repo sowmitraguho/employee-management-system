@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ThemeToggle from '../../../Components/ui/ThemeToggle';
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 // import { useAuth } from "@/context/AuthContext"; // assumes AuthContext setup
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
 
 
 
 const Navbar = () => {
+    const { 
+    loggedInUser, logOut} = useContext(AuthContext);
     return (
         <div>
             <header className="bg-white dark:bg-gray-900 border-b shadow-md">
@@ -38,16 +41,16 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <ThemeToggle />
 
-          {/* {user ? (
+          {loggedInUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer w-8 h-8">
-                  <AvatarImage src={user.photoURL} />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage src={loggedInUser.photoURL} />
+                  <AvatarFallback>{loggedInUser.displayName[0]}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem onClick={()=> logOut()}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -63,7 +66,7 @@ const Navbar = () => {
                 <Button size="sm">Register</Button>
               </Link>
             </>
-          )} */}
+          )}
         </div>
       </nav>
     </header>
