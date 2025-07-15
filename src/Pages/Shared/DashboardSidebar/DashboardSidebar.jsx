@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { FaChartBar, FaUserCheck, FaUsers, FaMoneyCheck, FaUserShield } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
+import ThemeToggle from "../../../Components/ui/ThemeToggle";
 
 const DashboardSidebar = ({ role }) => {
 
@@ -40,7 +41,10 @@ const DashboardSidebar = ({ role }) => {
 
   return (
     <aside className="w-64 min-h-screen bg-white dark:bg-gray-900 border-r dark:border-gray-800 p-4">
-      <h2 className="text-xl font-semibold mb-6">Dashboard</h2>
+      <div className="flex gap-4">
+        <h2 className="text-xl font-semibold mb-6">Dashboard</h2>
+       <ThemeToggle />
+      </div>
       <nav className="space-y-3">
         {links.map(({ to, label, icon }) => (
           <Link

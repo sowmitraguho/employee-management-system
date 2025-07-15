@@ -25,7 +25,42 @@ const useAxios = (baseURL) => {
     }
   };
 
-  return { postData, loading, error, response };
+  const putData = async (url, data, config = {}) => {
+    setLoading(true);
+    setError(null);
+    try {
+        const res = await axios.put(`${baseURL}${url}`, data, config);
+        setResponse(res.data);
+        console.log('data putting result', res);
+        return res.data;
+    } catch (err) {
+        setError(err);
+        console.error('PUT error:', err);
+        return null;
+    } finally {
+        setLoading(false);
+    }
+};
+
+const deleteData = async (url, config = {}) => {
+  setLoading(true);
+  setError(null);
+  try {
+    const res = await axios.delete(`${baseURL}${url}`, config);
+    setResponse(res.data);
+    console.log('data deleting result', res);
+    return res.data;
+  } catch (err) {
+    setError(err);
+    console.error('DELETE error:', err);
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  return { postData, putData, deleteData, loading, error, response };
 };
 
 export default useAxios;
