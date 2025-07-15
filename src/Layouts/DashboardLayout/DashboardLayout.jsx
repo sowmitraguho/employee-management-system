@@ -2,13 +2,13 @@ import { Outlet, Navigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import DashboardSidebar from "../../Pages/Shared/DashboardSidebar/DashboardSidebar";
-import useAxiosRole from "../../Hooks/useAxiosRole";
+import useAxiosGetData from "../../Hooks/useAxiosGetData";
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
   const [role, setRole] = useState(null);
   const [loadingRole, setLoadingRole] = useState(true);
-  const {getUserByEmail} = useAxiosRole();
+  const {getUserByEmail} = useAxiosGetData();
 
   useEffect(() => {
     const fetchUserRole = async () => {

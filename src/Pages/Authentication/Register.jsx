@@ -174,8 +174,6 @@ const Register = () => {
                 className="w-full mt-1 rounded border px-3 py-2 dark:bg-gray-800"
               >
                 <option value="">-- Select Designation --</option>
-                <option value="employee">Employee</option>
-                <option value="hr">HR</option>
                 <option value="software_engineer">Software Engineer</option>
                 <option value="frontend_developer">Frontend Developer</option>
                 <option value="backend_developer">Backend Developer</option>
