@@ -10,7 +10,7 @@ const DashboardSidebar = ({ role }) => {
   //const commonLinks = [{ to: "/dashboard", label: "Dashboard", icon: <FaChartBar /> }];
   //console.log(role);
   const hrLinks = [
-    { to: "/dashboard/employee-list", label: "Employee List", icon: <FaUsers /> },
+    { to: "/dashboard/employeelist", label: "Employee List", icon: <FaUsers /> },
     { to: "/dashboard/progress", label: "Progress", icon: <FaChartBar /> },
   ];
 

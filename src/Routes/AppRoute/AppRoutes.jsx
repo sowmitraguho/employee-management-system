@@ -9,6 +9,7 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute"
 import DashboardLayout from "../../Layouts/DashboardLayout/DashboardLayout"
 import EmployeeWorksheet from "../../Pages/EmployeeSection/EmployeeWorkSheet/EmployeeWorksheet"
 import PaymentHistory from "../../Pages/EmployeeSection/EmployeePaments/PaymentHistory"
+import EmployeeList from "../../Pages/HRSection/EmployeeList/EmployeeList"
 
 const routes = createBrowserRouter([
     {
@@ -24,12 +25,13 @@ const routes = createBrowserRouter([
     {
         path: '/dashboard',
         element: <PrivateRoute>
-            <DashboardLayout/>
+            <DashboardLayout />
         </PrivateRoute>,
         children: [
-            {index: true, Component: Dashboard},
-            {path: 'worksheet/:email', Component: EmployeeWorksheet},
-            {path: 'paymenthistory/:email', Component: PaymentHistory}
+            { index: true, Component: Dashboard },
+            { path: 'worksheet/:email', Component: EmployeeWorksheet },
+            { path: 'paymenthistory/:email', Component: PaymentHistory },
+            { path: 'employeelist', Component: EmployeeList }
         ]
     }
 ])
