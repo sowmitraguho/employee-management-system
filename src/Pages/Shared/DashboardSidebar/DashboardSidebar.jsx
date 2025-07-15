@@ -26,7 +26,7 @@ const DashboardSidebar = ({ role }) => {
     icon: <FaChartBar />
   },
   {
-    to: "/dashboard/payment-history", // will be added later
+    to: `/dashboard/paymenthistory/${loggedInUser?.email}`, // will be added later
     label: "Payment History",
     icon: <FaMoneyCheck />
   }

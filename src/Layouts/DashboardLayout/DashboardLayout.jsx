@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import DashboardSidebar from "../../Pages/Shared/DashboardSidebar/DashboardSidebar";
 import useAxiosGetData from "../../Hooks/useAxiosGetData";
+import Spinner from "../../Components/Spinner/Spinner"
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -33,7 +34,11 @@ const DashboardLayout = () => {
   if (!loggedInUser) return <Navigate to="/login" replace />;
 
   // Still fetching role
-  if (loadingRole) return <div className="p-10 text-center">Loading dashboard...</div>;
+  if (loadingRole) return <div className="p-10 text-center">
+  
+  Loading dashboard...
+  <Spinner/>
+  </div>;
 
   // If no valid role found, deny access
   //if (!role) return <Navigate to="/unauthorized" replace />;

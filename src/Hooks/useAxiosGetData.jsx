@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 
+
 const useAxiosGetData = () => {
     const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -30,7 +31,18 @@ const useAxiosGetData = () => {
       return null;
     }
   };
-    return { getUserByEmail, getWorksByEmail };
+  const getPaymentHistory = async (email) => {
+    if (!email) return null;
+    try {
+      const result = await axiosInstance.get(`/payments/${email}`);
+      console.log('data by email from hook', result);
+      return result; // returns {role, name, ...}
+    } catch (error) {
+      console.error("Failed to fetch user by email:", error.response?.data || error.message);
+      return null;
+    }
+  }
+    return { getUserByEmail, getWorksByEmail, getPaymentHistory };
 };
 
 export default useAxiosGetData;
