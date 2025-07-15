@@ -16,8 +16,8 @@ import Swal from 'sweetalert2';
 const SignIn = () => {
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
-    //const navigate = useNavigate();
-    const { signIn, googleSignIn, loggedInUser } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { signIn, googleSignIn } = useContext(AuthContext);
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -31,17 +31,18 @@ const SignIn = () => {
           const currentUser = result.user;
           console.log('login page user', currentUser);
           if (currentUser) {
-            Swal.fire({
+            await Swal.fire({
                   position: "top-end",
                   icon: "success",
                   title: "SignIn Successful!",
                   showConfirmButton: false,
                   timer: 1500
                 });
+                navigate('/');
           }
         } catch (err) {
           setError("Invalid email or password.");
-          console.log(err.message);
+          console.log('sign in error message:',err.message);
         }
     };
     const handleGoogleSignIn = async () => {
@@ -49,7 +50,7 @@ const SignIn = () => {
         try {
           const result = await googleSignIn();
           const currentUser = result.user;
-          console.log('from register page',currentUser);
+          console.log('from register page', currentUser);
           if (currentUser) {
             Swal.fire({
                   position: "top-end",
@@ -58,15 +59,16 @@ const SignIn = () => {
                   showConfirmButton: false,
                   timer: 1500
                 });
+                navigate('/');
           }
         } catch(err){
           setError(err.message)
         }
       }
     return (
-        <div className="p-20">
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
-                <div className="max-w-5xl w-full bg-white dark:bg-gray-900 shadow-md rounded-lg grid md:grid-cols-2">
+        <div className="p-20 h-screen w-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('https://t3.ftcdn.net/jpg/08/68/51/04/360_F_868510427_vsvN67LV1zSmLMyXMOFG05tRCmTAj1xL.jpg')" }}>
+            <div className="min-h-screen flex items-center justify-center bg-transparent px-4">
+                <div className="max-w-5xl w-full bg-white bg-opacity-10 shadow-md rounded-lg grid md:grid-cols-2 dark:bg-gray-900">
                     {/* Lottie animation */}
                     <div className="hidden md:flex items-center justify-center p-6">
                         <Lottie animationData={loginLottie} loop className="w-80 h-80" />

@@ -1,9 +1,9 @@
 import { Link } from "react-router";
 import { FaChartBar, FaUserCheck, FaUsers, FaMoneyCheck, FaUserShield } from "react-icons/fa";
 
-const Sidebar = ({ role }) => {
-  const commonLinks = [{ to: "/dashboard", label: "Dashboard", icon: <FaChartBar /> }];
-
+const DashboardSidebar = ({ role }) => {
+  //const commonLinks = [{ to: "/dashboard", label: "Dashboard", icon: <FaChartBar /> }];
+  //console.log(role);
   const hrLinks = [
     { to: "/dashboard/employee-list", label: "Employee List", icon: <FaUsers /> },
     { to: "/dashboard/progress", label: "Progress", icon: <FaChartBar /> },
@@ -20,7 +20,7 @@ const Sidebar = ({ role }) => {
   ];
 
   const links = [
-    ...commonLinks,
+    //...commonLinks,
     ...(role === "hr" ? hrLinks : []),
     ...(role === "admin" ? adminLinks : []),
     ...(role === "employee" ? employeeLinks : []),
@@ -45,4 +45,4 @@ const Sidebar = ({ role }) => {
   );
 };
 
-export default Sidebar;
+export default DashboardSidebar;

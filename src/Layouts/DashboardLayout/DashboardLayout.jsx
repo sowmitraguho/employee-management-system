@@ -2,25 +2,44 @@ import { Outlet, Navigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import DashboardSidebar from "../../Pages/Shared/DashboardSidebar/DashboardSidebar";
+import useAxiosRole from "../../Hooks/useAxiosRole";
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
   const [role, setRole] = useState(null);
+  const [loadingRole, setLoadingRole] = useState(true);
+  const {getUserByEmail} = useAxiosRole();
 
   useEffect(() => {
-    if (loggedInUser?.email) {
-      // Fetch user role from backend/Firestore here
-      const fakeRole = "employee"; // change dynamically
-      setTimeout(() => setRole(fakeRole), 500);
-    }
+    const fetchUserRole = async () => {
+      if (loggedInUser?.email) {
+        try {
+          const data = await getUserByEmail(loggedInUser.email);
+          console.log(data);
+          setRole(data); // role should be "employee", "hr", or "admin"
+        } catch (error) {
+          console.error("Error fetching role:", error);
+          setRole(null);
+        } finally {
+          setLoadingRole(false);
+        }
+      }
+    };
+
+    fetchUserRole();
   }, [loggedInUser]);
 
+  // Not logged in? Redirect to login
   if (!loggedInUser) return <Navigate to="/login" replace />;
-  if (!role) return <div className="p-10">Loading...</div>;
 
+  // Still fetching role
+  if (loadingRole) return <div className="p-10 text-center">Loading dashboard...</div>;
+
+  // If no valid role found, deny access
+  //if (!role) return <Navigate to="/unauthorized" replace />;
   return (
     <div className="min-h-screen flex">
-      <DashboardSidebar/>
+      <DashboardSidebar role={role} />
       <main className="flex-1 p-4 bg-muted/40 dark:bg-gray-950">
         <Outlet context={{ role }} />
       </main>
