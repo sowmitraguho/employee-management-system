@@ -8,33 +8,22 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
 import useAxiosGetData from '../../../Hooks/useAxiosGetData';
+import useAxios from '../../../Hooks/useAxios';
 
 const EmployeeWorksheet = () => {
 
-    //new usestate
-    const [workName, setWorkName] = useState("");
-    const [designation, setDesignation] = useState("");
-    const [taskType, setTaskType] = useState("");
-    const [assignedDate, setAssignedDate] = useState(new Date());
-    const [completionDate, setCompletionDate] = useState(new Date());
-    const [finishHour, setFinishHour] = useState('');
-    const [status, setStatus] = useState("");
-    const [remarks, setRemarks] = useState("");
-
-
-
-
-    const { loggedInUser } = useContext(AuthContext);
-    const { getWorksByEmail } = useAxiosGetData();
-
-    // Local states
-    const [task, setTask] = useState("Sales");
-    const [hours, setHours] = useState(0);
-    const [date, setDate] = useState(new Date());
+    //usestates
     const [works, setWorks] = useState([]);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
 
+    //required data and fuction
+    const { loggedInUser } = useContext(AuthContext);
+    const { getWorksByEmail } = useAxiosGetData();
+    const { postData } = useAxios(import.meta.env.VITE_API_URL)
+
+
+    //fetch data of user
     useEffect(() => {
         const fetchWorks = async () => {
             try {
@@ -54,6 +43,37 @@ const EmployeeWorksheet = () => {
     }, [loggedInUser.email])
 
 
+    const handleAddWork = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const newWork = {
+            workName: formData.get("workName"),
+            assignedDate: formData.get("assignedDate"),
+            completionDate: formData.get("completionDate"),
+            finishHour: parseInt(formData.get("finishHour")) || 0,
+            status: formData.get("status"),
+            remarks: formData.get("remarks"),
+            email: loggedInUser?.email || "unknown@user.com",
+        };
+
+        try {
+            // ✅ 1. Save to DB
+            await postData("/works", newWork);
+
+            // ✅ 2. Fetch updated works
+            const res = await getWorksByEmail(loggedInUser.email);
+            console.log(res);
+            
+            setWorks(res);
+
+            // ✅ 4. Reset form
+            e.target.reset();
+        } catch (err) {
+            console.error("❌ Failed to add work:", err.message);
+        }
+    };
+
 
 
 
@@ -61,117 +81,72 @@ const EmployeeWorksheet = () => {
         <div>
             <div className="p-6 space-y-6">
                 {/* Form in a single row */}
-                {/* <div className="flex items-center gap-4">
-                    <Select value={task} onValueChange={setTask}>
-                        <SelectTrigger className="w-[150px]">
-                            <SelectValue placeholder="Select Task" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Sales">Sales</SelectItem>
-                            <SelectItem value="Support">Support</SelectItem>
-                            <SelectItem value="Content">Content</SelectItem>
-                            <SelectItem value="Paper-work">Paper-work</SelectItem>
-                            <SelectItem value="Research">Research</SelectItem>
-                        </SelectContent>
-                    </Select>
+                <h2 className="text-xl text-blue-500 font-bold">Add New Task</h2>
+                <form
+                    onSubmit={handleAddWork}
+                    className="flex flex-wrap items-center gap-4"
+                >
+                    {/* ✅ Work Name */}
+                    <select name="workName" className="border p-2 rounded w-[200px]">
+                        {works?.map((w) => (
+                            <option key={w._id} value={w.workName}>
+                                {w.workName}
+                            </option>
+                        ))}
+                        <option value="New Feature Development">New Feature Development</option>
+                        <option value="UI Redesign">UI Redesign</option>
+                        <option value="API Integration">API Integration</option>
+                    </select>
 
-                    <Input
-                        type="number"
-                        placeholder="Hours Worked"
-                        value={hours}
-                        onChange={(e) => setHours(parseInt(e.target.value))}
-                        className="w-[150px]"
-                    />
-
-                    <DatePicker
-                        selected={date}
-                        onChange={(d) => setDate(d)}
-                        className="border rounded-md p-2"
-                    />
-
-                    <Button >Add / Submit</Button>
-                </div> */}
-                <div className="flex flex-wrap items-center gap-4">
-
-                    {/* ✅ Work Name (Dropdown populated from DB + manual entry) */}
-                    <Select value={workName} onValueChange={setWorkName}>
-                        <SelectTrigger className="w-[200px]">
-                            <SelectValue placeholder="Select Work Name" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {/* ✅ Existing work names from DB */}
-                            {works?.map((w) => (
-                                <SelectItem key={w._id} value={w.workName}>
-                                    {w.workName}
-                                </SelectItem>
-                            ))}
-                            {/* ✅ Static fallback options */}
-                            <SelectItem value="New Feature Development">New Feature Development</SelectItem>
-                            <SelectItem value="UI Redesign">UI Redesign</SelectItem>
-                            <SelectItem value="API Integration">API Integration</SelectItem>
-                            <SelectItem value="Sales">Sales</SelectItem>
-                            <SelectItem value="Support">Support</SelectItem>
-                            <SelectItem value="Content">Content</SelectItem>
-                            <SelectItem value="Paper-work">Paper-work</SelectItem>
-                            <SelectItem value="Research">Research</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    {/* ✅ Task Type */}
                     {/* ✅ Assigned Date */}
-                    <DatePicker
-                        //selected={assignedDate}
-                        onChange={(d) => setAssignedDate(d)}
+                    <input
+                        type="date"
+                        name="assignedDate"
                         className="border rounded-md p-2"
-                        placeholderText="Assigned Date"
                     />
 
                     {/* ✅ Completion Date */}
-                    <DatePicker
-                        //selected={completionDate}
-                        onChange={(d) => setCompletionDate(d)}
+                    <input
+                        type="date"
+                        name="completionDate"
                         className="border rounded-md p-2"
-                        placeholderText="Completion Date"
                     />
 
                     {/* ✅ Hours Worked */}
-                    <Input
+                    <input
                         type="number"
+                        name="finishHour"
                         placeholder="Finish Hours"
-                        value={finishHour}
-                        onChange={(e) => setFinishHour(parseInt(e.target.value))}
-                        className="w-[120px]"
+                        className="border rounded-md p-2 w-[120px]"
                     />
 
-                    
-
                     {/* ✅ Status */}
-                    <Select value={status} onValueChange={setStatus}>
-                        <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="accepted">Accepted</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="reassigned">Reassigned</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <select name="status" className="border rounded-md p-2 w-[140px]">
+                        <option value="accepted">Accepted</option>
+                        <option value="pending">Pending</option>
+                        <option value="reassigned">Reassigned</option>
+                    </select>
 
                     {/* ✅ Remarks */}
-                    <Input
+                    <input
                         type="text"
+                        name="remarks"
                         placeholder="Remarks"
-                        value={remarks}
-                        onChange={(e) => setRemarks(e.target.value)}
-                        className="w-[200px]"
+                        className="border rounded-md p-2 w-[200px]"
                     />
 
                     {/* ✅ Submit */}
-                    <Button > Submit</Button>
-                </div>
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        Submit
+                    </button>
+                </form>
 
 
                 {/* Table */}
+                <h2 className="text-xl text-blue-500 font-bold">Your Task</h2>
                 <table className="w-full border text-left">
                     <thead>
                         <tr className="bg-gray-100">
@@ -181,7 +156,6 @@ const EmployeeWorksheet = () => {
                             <th className="p-2">Completion Date</th>
                             <th className="p-2">Hours</th>
                             <th className="p-2">Status</th>
-                            <th className="p-2">Task Type</th>
                             <th className="p-2">Actions</th>
                         </tr>
                     </thead>
@@ -219,8 +193,6 @@ const EmployeeWorksheet = () => {
                                 </td>
 
 
-                                {/* ✅ Task Type */}
-                                <td className="p-2">{work.taskType}</td>
 
                                 {/* ✅ Actions */}
                                 <td className="p-2 space-x-2">

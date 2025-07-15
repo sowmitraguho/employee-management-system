@@ -1,7 +1,11 @@
 import { Link } from "react-router";
 import { FaChartBar, FaUserCheck, FaUsers, FaMoneyCheck, FaUserShield } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 
 const DashboardSidebar = ({ role }) => {
+
+  const {loggedInUser} = useContext(AuthContext);
   //const commonLinks = [{ to: "/dashboard", label: "Dashboard", icon: <FaChartBar /> }];
   //console.log(role);
   const hrLinks = [
@@ -15,9 +19,17 @@ const DashboardSidebar = ({ role }) => {
   ];
 
   const employeeLinks = [
-    { to: "/dashboard/work-sheet", label: "Work Sheet", icon: <FaChartBar /> },
-    { to: "/dashboard/payment-history", label: "Payment History", icon: <FaMoneyCheck /> },
-  ];
+  {
+    to: `/dashboard/worksheet/${loggedInUser?.email}`, 
+    label: "Work Sheet",
+    icon: <FaChartBar />
+  },
+  {
+    to: "/dashboard/payment-history", // will be added later
+    label: "Payment History",
+    icon: <FaMoneyCheck />
+  }
+];
 
   const links = [
     //...commonLinks,
