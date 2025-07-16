@@ -11,6 +11,7 @@ import EmployeeWorksheet from "../../Pages/EmployeeSection/EmployeeWorkSheet/Emp
 import PaymentHistory from "../../Pages/EmployeeSection/EmployeePaments/PaymentHistory"
 import EmployeeList from "../../Pages/HRSection/EmployeeList/EmployeeList"
 import EmployeeDetails from "../../Pages/HRSection/EmployeeDetails/EmployeeDetails"
+import ProgressPage from "../../Pages/HRSection/Progress/ProgressPage"
 
 const routes = createBrowserRouter([
     {
@@ -33,7 +34,8 @@ const routes = createBrowserRouter([
             { path: 'worksheet/:email', Component: EmployeeWorksheet },
             { path: 'paymenthistory/:email', Component: PaymentHistory },
             { path: 'employeelist', Component: EmployeeList },
-            { path: 'employeedetails/:email', Component: EmployeeDetails }
+            { path: 'employeedetails/:email', Component: EmployeeDetails },
+            { path: 'progress', Component: ProgressPage }
         ]
     }
 ])
