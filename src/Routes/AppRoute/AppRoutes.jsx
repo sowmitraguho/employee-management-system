@@ -10,6 +10,7 @@ import DashboardLayout from "../../Layouts/DashboardLayout/DashboardLayout"
 import EmployeeWorksheet from "../../Pages/EmployeeSection/EmployeeWorkSheet/EmployeeWorksheet"
 import PaymentHistory from "../../Pages/EmployeeSection/EmployeePaments/PaymentHistory"
 import EmployeeList from "../../Pages/HRSection/EmployeeList/EmployeeList"
+import EmployeeDetails from "../../Pages/HRSection/EmployeeDetails/EmployeeDetails"
 
 const routes = createBrowserRouter([
     {
@@ -31,7 +32,8 @@ const routes = createBrowserRouter([
             { index: true, Component: Dashboard },
             { path: 'worksheet/:email', Component: EmployeeWorksheet },
             { path: 'paymenthistory/:email', Component: PaymentHistory },
-            { path: 'employeelist', Component: EmployeeList }
+            { path: 'employeelist', Component: EmployeeList },
+            { path: 'employeedetails/:email', Component: EmployeeDetails }
         ]
     }
 ])

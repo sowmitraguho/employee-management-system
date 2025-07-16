@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Spinner from "../../../Components/Spinner/Spinner";
+import { useNavigate } from "react-router";
 
 const fetchEmployees = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/users?role=Employee`);
@@ -17,14 +18,14 @@ const fetchEmployees = async () => {
 };
 
 const toggleVerified = async (userId, newStatus) => {
-    console.log("Toggling user:", userId, "to", newStatus);
+    //console.log("Toggling user:", userId, "to", newStatus);
   const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ isVerified: newStatus }),
   });
   const data = await res.json();
-  console.log("Server response:", data);
+  //console.log("Server response:", data);
   return data;
 };
 
@@ -86,6 +87,12 @@ export default function EmployeeList() {
     payrollMutation.mutate(requestData);
   };
 
+  const navigate = useNavigate();
+
+  const handleViewDetails = (email) => {
+    navigate(`/dashboard/employeedetails/${email}`);
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Employee List</h2>
@@ -139,7 +146,7 @@ export default function EmployeeList() {
                   </Button>
                 </td>
                 <td className="px-4 py-3">
-                  <Button size="sm" variant="outline">
+                  <Button onClick={() => handleViewDetails(emp.email)} size="sm" variant="outline">
                     View
                   </Button>
                 </td>
@@ -159,7 +166,7 @@ export default function EmployeeList() {
           <div className="space-y-4">
             <Input
               type="number"
-              value={selectedEmployee?.salary || ""}
+              value={selectedEmployee?.Salary || ""}
               disabled
             />
             <Input
