@@ -20,7 +20,8 @@ export default function AdminEmployeesPage() {
   // ✅ Fetch all verified users
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(`${baseURL}/users/verified`, { withCredentials: true });
+      const res = await axios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
+      console.log('fetched employee for admin',res.data);
       setEmployees(res.data || []);
     } catch (err) {
       console.error("Error fetching employees:", err);
