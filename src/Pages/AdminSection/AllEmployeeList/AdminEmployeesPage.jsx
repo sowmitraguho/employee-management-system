@@ -21,7 +21,7 @@ export default function AdminEmployeesPage() {
   const fetchEmployees = async () => {
     try {
       const res = await axios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
-      console.log('fetched employee for admin',res.data);
+      console.log('fetched employee for admin', res.data);
       setEmployees(res.data || []);
     } catch (err) {
       console.error("Error fetching employees:", err);
@@ -37,7 +37,7 @@ export default function AdminEmployeesPage() {
   // ✅ Fire an employee
   const fireEmployee = async (userId) => {
     try {
-      await axios.patch(`${baseURL}/users/${userId}/fire`, {}, { withCredentials: true });
+      await axios.patch(`${baseURL}/vfusers/${userId}/fire`, {}, { withCredentials: true });
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, status: "fired" } : emp
@@ -51,7 +51,7 @@ export default function AdminEmployeesPage() {
   // ✅ Make Employee HR
   const makeHR = async (userId) => {
     try {
-      await axios.patch(`${baseURL}/users/${userId}/makeHR`, {}, { withCredentials: true });
+      await axios.patch(`${baseURL}/vfusers/${userId}/makeHR`, {}, { withCredentials: true });
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, role: "HR" } : emp
@@ -65,20 +65,28 @@ export default function AdminEmployeesPage() {
   // ✅ Update Salary
   const updateSalary = async (userId) => {
     if (!newSalary || isNaN(newSalary)) return alert("Enter a valid salary");
+    console.log('newsalary before update', newSalary);
     try {
-      await axios.patch(`${baseURL}/users/${userId}/salary`, { salary: Number(newSalary) }, { withCredentials: true });
+      await axios.patch(
+        `${baseURL}/vfusers/${userId}/salary`,
+        { Salary: Number(newSalary) },  // ✅ Always send as string
+        { withCredentials: true }
+      );
+
       setEmployees((prev) =>
         prev.map((emp) =>
-          emp._id === userId ? { ...emp, salary: Number(newSalary) } : emp
+          emp._id === userId ? { ...emp, Salary: Number(newSalary) } : emp
         )
       );
+
       setSalaryModalOpen(false);
       setNewSalary("");
     } catch (err) {
-      console.error("Error updating salary:", err);
+      console.error("Error updating salary:", err.response?.data || err);
     }
   };
 
+  //console.log('employees', employees);
   if (loading) return <p className="text-center mt-6">Loading employees...</p>;
 
   return (
@@ -106,11 +114,11 @@ export default function AdminEmployeesPage() {
                 <TableCell className="capitalize dark:text-gray-300">
                   {emp.role === "HR" ? "HR" : "Employee"}
                 </TableCell>
-                <TableCell className="dark:text-gray-300">{emp.salary || "Not set"}</TableCell>
+                <TableCell className="dark:text-gray-300">{emp.Salary || "Not set"}</TableCell>
 
                 {/* ✅ Make HR Button */}
                 <TableCell>
-                  {emp.role === "Employee" && emp.status !== "fired" ? (
+                  {emp.role === "employee" && emp.status !== "fired" ? (
                     <Button
                       size="sm"
                       variant="outline"
@@ -173,7 +181,7 @@ export default function AdminEmployeesPage() {
             <DialogTitle>Confirm Firing</DialogTitle>
           </DialogHeader>
           <p>
-            Are you sure you want to <span className="font-bold text-red-500">fire {selectedUser?.name}</span>?  
+            Are you sure you want to <span className="font-bold text-red-500">fire {selectedUser?.name}</span>?
             They won’t be able to log in anymore.
           </p>
           <DialogFooter className="flex justify-end gap-2 mt-4">
@@ -195,13 +203,13 @@ export default function AdminEmployeesPage() {
       <Dialog open={salaryModalOpen} onOpenChange={setSalaryModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Adjust Salary for {selectedUser?.name}</DialogTitle>
+            <DialogTitle>Adjust Salary for {selectedUser?.email}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <label className="text-sm font-medium">
               Enter new salary:
               <Input
-                type="number"
+                type="text"
                 placeholder="Enter salary"
                 value={newSalary}
                 onChange={(e) => setNewSalary(e.target.value)}

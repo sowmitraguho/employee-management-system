@@ -13,6 +13,7 @@ import EmployeeList from "../../Pages/HRSection/EmployeeList/EmployeeList"
 import EmployeeDetails from "../../Pages/HRSection/EmployeeDetails/EmployeeDetails"
 import ProgressPage from "../../Pages/HRSection/Progress/ProgressPage"
 import AdminEmployeesPage from "../../Pages/AdminSection/AllEmployeeList/AdminEmployeesPage"
+import PayrollPage from "../../Pages/AdminSection/PayrollPage/PayrollPage"
 
 const routes = createBrowserRouter([
     {
@@ -37,7 +38,8 @@ const routes = createBrowserRouter([
             { path: 'employeelist', Component: EmployeeList },
             { path: 'employeedetails/:email', Component: EmployeeDetails },
             { path: 'progress', Component: ProgressPage },
-            { path: 'adminemployeelist', Component: AdminEmployeesPage }
+            { path: 'adminemployeelist', Component: AdminEmployeesPage },
+            { path: 'payroll', Component: PayrollPage }
         ]
     }
 ])
