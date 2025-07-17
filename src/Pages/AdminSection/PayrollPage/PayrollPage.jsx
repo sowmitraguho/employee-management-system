@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 //import { toast } from "@/components/ui/use-toast";
 import axios from "axios";
+import Spinner from "../../../Components/Spinner/Spinner";
 
 export default function PayrollPage() {
     const [role, setRole] = useState("hr"); // ✅ Replace with logged-in user role
@@ -48,7 +49,10 @@ export default function PayrollPage() {
         },
     });
 
-    if (isLoading) return <p>Loading payroll data...</p>;
+    if (isLoading) return <div>
+        <p>Loading payroll data...</p>
+        <Spinner/>
+    </div>;
 
     return (
         <div className="p-6 space-y-6">

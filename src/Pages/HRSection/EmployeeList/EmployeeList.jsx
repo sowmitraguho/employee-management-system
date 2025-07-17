@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Table, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Spinner from "../../../Components/Spinner/Spinner";
 import { useNavigate } from "react-router";
+import axios from "axios";
+import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 
 const fetchEmployees = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/users?role=Employee`);
@@ -18,25 +20,49 @@ const fetchEmployees = async () => {
 };
 
 const toggleVerified = async (userId, newStatus) => {
-    //console.log("Toggling user:", userId, "to", newStatus);
   const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ isVerified: newStatus }),
   });
   const data = await res.json();
-  //console.log("Server response:", data);
   return data;
 };
 
+
 const createPayrollRequest = async (requestData) => {
-  const res = await fetch("https://your-server.com/payroll", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(requestData),
-  });
-  return res.json();
+  console.log('createPayRollRequest', requestData);
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/payroll/request`,
+      requestData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    // ✅ axios automatically parses JSON → return res.data
+    return res.data;
+
+  } catch (error) {
+    console.error("❌ Error creating payroll request:", error);
+
+    // ✅ Show useful error message
+    if (error.response) {
+      // Server responded with an error status
+      console.error("Server Error:", error.response.data);
+      throw new Error(error.response.data.message || "Server error");
+    } else if (error.request) {
+      // No response from server
+      throw new Error("No response from server. Check your network.");
+    } else {
+      // Something else
+      throw new Error(error.message || "Unexpected error");
+    }
+  }
 };
+
+
 
 export default function EmployeeList() {
   const queryClient = useQueryClient();
@@ -44,6 +70,7 @@ export default function EmployeeList() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [open, setOpen] = useState(false);
+  const {loggedInUser} = useContext(AuthContext);
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
@@ -75,14 +102,22 @@ export default function EmployeeList() {
   };
 
   const handleSubmitPay = () => {
-    if (!month || !year || !selectedEmployee) return;
-
+    if (!month || !year || !selectedEmployee) {
+      console.log('month - year - selectedEmployee', month, year, selectedEmployee);
+      return ;
+    }
+    console.log('month - year - selectedEmployee', month, year, selectedEmployee);
+    
     const requestData = {
+      employeeId : selectedEmployee._id,
       employeeEmail: selectedEmployee.email,
-      salaryAmount: selectedEmployee.salary,
+      employeeSalary: selectedEmployee.Salary,
+      employeeBankAcc: selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
+      employeeRole: selectedEmployee.role,
       month,
       year,
-      status: "pending", // for admin approval
+      status: "pending",
+      requestedBy: loggedInUser.email,
     };
     payrollMutation.mutate(requestData);
   };
@@ -92,7 +127,7 @@ export default function EmployeeList() {
   const handleViewDetails = (email) => {
     navigate(`/dashboard/employeedetails/${email}`);
   };
-
+  //console.log('employees from employee list: ', employees);
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Employee List</h2>
@@ -115,8 +150,8 @@ export default function EmployeeList() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {employees.map((emp) => (
-              <tr key={emp._id} className="hover:bg-gray-800/50">
+            {employees.map((emp, idx) => (
+              <tr key={emp._id+idx} className="hover:bg-gray-800/50">
                 <td className="px-4 py-3 font-medium whitespace-nowrap">
                   {emp.name}
                 </td>
@@ -130,7 +165,7 @@ export default function EmployeeList() {
                   </button>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  {emp.bank_account_no || "-"}
+                  {emp.bank_account_no || emp.bankAccountNo || "-"}
                 </td>
                 <td className="px-4 py-3">{emp.Salary}৳</td>
                 <td className="px-4 py-3">
