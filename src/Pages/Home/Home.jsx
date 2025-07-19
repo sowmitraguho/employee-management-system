@@ -5,6 +5,9 @@ import HeroSection from "./HeroSection";
 import AboutSection from "./AboutSection";
 import ServicesSection from "./ServicesSection";
 import TestimonialSection from "./TestimonialSection";
+import PricingSection from "./PricingSection";
+import MessageUsSection from "./MessageUsSection";
+import Footer from "../Shared/Footer/Footer";
 
 export default function HomePage() {
   return (
@@ -57,18 +60,13 @@ export default function HomePage() {
      
       <TestimonialSection/>
 
-      {/* ✅ Call-to-Action Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 text-white py-16 px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Ready to Transform Your Workforce?
-        </h2>
-        <p className="mb-6 max-w-xl mx-auto text-gray-100 dark:text-gray-300">
-          Join hundreds of companies using our platform to manage employees effortlessly.
-        </p>
-        <Button className="bg-white text-blue-700 hover:bg-gray-100 font-semibold px-6 py-3 rounded-lg shadow-md">
-          Create Your Account Now
-        </Button>
-      </section>
+      {/* pricing section */}
+      <PricingSection/>
+
+      {/* message us section */}
+      <MessageUsSection/>
+
+     
     </div>
   );
 }
