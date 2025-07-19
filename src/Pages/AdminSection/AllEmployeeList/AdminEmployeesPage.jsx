@@ -126,7 +126,7 @@ export default function AdminEmployeesPage() {
                     >
                       Make HR
                     </Button>
-                  ) : emp.role === "HR" ? (
+                  ) : emp.role === "hr" ? (
                     <span className="text-green-600 font-medium">Already HR</span>
                   ) : (
                     "-"

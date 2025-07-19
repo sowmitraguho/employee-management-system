@@ -1,4 +1,4 @@
-import { useState } from "react";
+//import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,8 @@ import axios from "axios";
 import Spinner from "../../../Components/Spinner/Spinner";
 
 export default function PayrollPage() {
-    const [role, setRole] = useState("hr"); // ✅ Replace with logged-in user role
+    //const [role, setRole] = useState("hr"); // ✅ Replace with logged-in user role
+    const role = 'admin';
     const queryClient = useQueryClient();
     const baseURL = import.meta.env.VITE_API_URL;
 
@@ -17,7 +18,8 @@ export default function PayrollPage() {
         queryKey: ["payroll"],
         queryFn: async () => {
             const res = await axios.get(`${baseURL}/payroll`);
-            return res.json();
+            console.log('result from payroll', res.data);
+            return res.data;
         },
     });
 
@@ -30,7 +32,7 @@ export default function PayrollPage() {
             return res.json();
         },
         onSuccess: () => {
-           // toast({ title: "Payroll request sent ✅" });
+            // toast({ title: "Payroll request sent ✅" });
             queryClient.invalidateQueries(["payroll"]);
         },
     });
@@ -41,45 +43,54 @@ export default function PayrollPage() {
             const res = await axios.patch(`${baseURL}/payroll/${id}`, { status }, {
                 headers: { "Content-Type": "application/json" },
             });
+            console.log('update payrollstatus mutation: ', res);
             return res.json();
         },
         onSuccess: () => {
-           // toast({ title: "Payroll updated ✅" });
+            // toast({ title: "Payroll updated ✅" });
             queryClient.invalidateQueries(["payroll"]);
         },
     });
 
     if (isLoading) return <div>
         <p>Loading payroll data...</p>
-        <Spinner/>
+        <Spinner />
     </div>;
 
     return (
-        <div className="p-6 space-y-6">
-            <Card>
+        <div className="p-4 sm:p-6 space-y-6">
+            <Card className="bg-white dark:bg-gray-900 shadow-md rounded-lg">
                 <CardHeader>
-                    <CardTitle>Payroll Section ({role} View)</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        Payroll Section ({role} View)
+                    </CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <Table>
+                <CardContent className="overflow-x-auto">
+                    <Table className="w-full text-sm sm:text-base">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Employee</TableHead>
-                                <TableHead>Month</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Action</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Employee</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Month</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Year</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Amount</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Status</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Payment Date</TableHead>
+                                <TableHead className="text-gray-700 dark:text-gray-300">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {payrollData.map((record) => (
-                                <TableRow key={record._id}>
-                                    <TableCell>{record.employeeName}</TableCell>
-                                    <TableCell>{record.month}</TableCell>
-                                    <TableCell>${record.amount}</TableCell>
+                                <TableRow
+                                    key={record._id}
+                                    className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    <TableCell className="text-gray-800 dark:text-gray-200">{record.employeeName}</TableCell>
+                                    <TableCell className="text-gray-800 dark:text-gray-200">{record.month}</TableCell>
+                                    <TableCell className="text-gray-800 dark:text-gray-200">{record.year}</TableCell>
+                                    <TableCell className="text-gray-800 dark:text-gray-200">${record.employeeSalary}</TableCell>
                                     <TableCell>
                                         <span
-                                            className={`px-2 py-1 rounded text-white ${record.status === "pending"
+                                            className={`px-2 py-1 rounded text-white text-xs sm:text-sm ${record.status === "pending"
                                                 ? "bg-yellow-500"
                                                 : record.status === "approved"
                                                     ? "bg-green-500"
@@ -91,19 +102,25 @@ export default function PayrollPage() {
                                             {record.status}
                                         </span>
                                     </TableCell>
+                                    <TableCell className="text-gray-800 dark:text-gray-200">
+                                        {record.paymentDate ? new Date(record.paymentDate).toLocaleDateString() : "-"}
+                                    </TableCell>
                                     <TableCell>
-                                        {role === "HR" && record.status === "none" && (
+                                        {/* ✅ HR View */}
+                                        {role === "hr" && record.status === "none" && (
                                             <Button
+                                                className="w-full sm:w-auto"
                                                 onClick={() => sendPayrollRequest.mutate(record.employeeId)}
                                             >
                                                 Send for Payment
                                             </Button>
                                         )}
 
-                                        {role === "Admin" && record.status === "pending" && (
-                                            <div className="space-x-2">
+                                        {/* ✅ Admin View */}
+                                        {role === "admin" && record.status === "pending" && (
+                                            <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                                                 <Button
-                                                    className="bg-green-600"
+                                                    className="bg-green-600 hover:bg-green-700" disabled={record.status === "approved" || record.status === "rejected"}
                                                     onClick={() =>
                                                         updatePayrollStatus.mutate({ id: record._id, status: "approved" })
                                                     }
@@ -111,7 +128,7 @@ export default function PayrollPage() {
                                                     Approve
                                                 </Button>
                                                 <Button
-                                                    variant="destructive"
+                                                    variant="destructive" disabled={record.status === "approved" || record.status === "rejected"}
                                                     onClick={() =>
                                                         updatePayrollStatus.mutate({ id: record._id, status: "rejected" })
                                                     }
@@ -121,7 +138,8 @@ export default function PayrollPage() {
                                             </div>
                                         )}
 
-                                        {role === "Employee" && <span>-</span>}
+                                        {/* ✅ Employee View */}
+                                        {role === "employee" && <span className="text-gray-500 dark:text-gray-400">-</span>}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -130,5 +148,6 @@ export default function PayrollPage() {
                 </CardContent>
             </Card>
         </div>
+
     );
 }

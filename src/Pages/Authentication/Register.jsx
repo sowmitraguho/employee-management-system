@@ -26,8 +26,9 @@ const Register = () => {
     bankAccountNo: "AC25647894566",
     photoURL: ""
   });
+  const baseURL = import.meta.env.VITE_API_URL;
   const { createUser, googleSignIn, updateUser } = useContext(AuthContext);
-  const { postData } = useAxios('https://employee-management-system-server-3k7l.onrender.com');
+  const { postData } = useAxios(baseURL);
   const navigate = useNavigate();
 
   //formdata collection
@@ -45,9 +46,9 @@ const Register = () => {
       const response = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbbApiKey}`, formData);
       if (!response) return;
       setImageUrl(response.data.data.display_url);
-      //console.log('Image uploaded:', response.data.data.display_url);
+      console.log('Image uploaded:', response.data.data.display_url);
     } catch (err) {
-      //console.error('Image upload error:', error);
+      console.error('Image upload error:', error);
       Swal.fire({
         title: err.message,
         icon: "error",
@@ -87,7 +88,7 @@ const Register = () => {
           .then(async () => {
             //upload user data in mongodb
             const fullForm = { ...form, imageUrl }
-            const result = await postData('/users', fullForm);
+            const result = await postData('users', fullForm);
             if (result) {
               console.log('User created:', result);
             }
@@ -99,8 +100,9 @@ const Register = () => {
               showConfirmButton: false,
               timer: 1500
             });
+            navigate('/');
           })
-        navigate('/');
+        
       }
     } catch (err) {
       setError(err.message);

@@ -70,7 +70,7 @@ export default function EmployeeList() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [open, setOpen] = useState(false);
-  const {loggedInUser} = useContext(AuthContext);
+  const { loggedInUser } = useContext(AuthContext);
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
@@ -104,12 +104,13 @@ export default function EmployeeList() {
   const handleSubmitPay = () => {
     if (!month || !year || !selectedEmployee) {
       console.log('month - year - selectedEmployee', month, year, selectedEmployee);
-      return ;
+      return;
     }
     console.log('month - year - selectedEmployee', month, year, selectedEmployee);
-    
+
     const requestData = {
-      employeeId : selectedEmployee._id,
+      employeeId: selectedEmployee._id,
+      employeeName: selectedEmployee.name,
       employeeEmail: selectedEmployee.email,
       employeeSalary: selectedEmployee.Salary,
       employeeBankAcc: selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
@@ -134,62 +135,61 @@ export default function EmployeeList() {
 
       {isLoading ? <div>
         <p>Loading...</p>
-        <Spinner/>
+        <Spinner />
       </div> : (
         <div className="overflow-x-auto shadow rounded-lg border border-gray-700">
-        <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-800 text-gray-300 uppercase">
-            <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Verified</th>
-              <th className="px-4 py-3">Bank Account</th>
-              <th className="px-4 py-3">Salary</th>
-              <th className="px-4 py-3">Pay</th>
-              <th className="px-4 py-3">Details</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-700">
-            {employees.map((emp, idx) => (
-              <tr key={emp._id+idx} className="hover:bg-gray-800/50">
-                <td className="px-4 py-3 font-medium whitespace-nowrap">
-                  {emp.name}
-                </td>
-                <td className="px-4 py-3 whitespace-nowrap">{emp.email}</td>
-                <td className="px-4 py-3 text-center">
-                  <button
-                    onClick={() => handleVerifyToggle(emp)}
-                    className="text-xl"
-                  >
-                    {emp.isVerified ? "✅" : "❌"}
-                  </button>
-                </td>
-                <td className="px-4 py-3 whitespace-nowrap">
-                  {emp.bank_account_no || emp.bankAccountNo || "-"}
-                </td>
-                <td className="px-4 py-3">{emp.Salary}৳</td>
-                <td className="px-4 py-3">
-                  <Button
-                    size="sm"
-                    disabled={!emp.isVerified}
-                    className={`${
-                      !emp.isVerified ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    onClick={() => handlePayClick(emp)}
-                  >
-                    Pay
-                  </Button>
-                </td>
-                <td className="px-4 py-3">
-                  <Button onClick={() => handleViewDetails(emp.email)} size="sm" variant="outline">
-                    View
-                  </Button>
-                </td>
+          <table className="min-w-full text-sm text-left">
+            <thead className="bg-gray-800 text-gray-300 uppercase">
+              <tr>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Verified</th>
+                <th className="px-4 py-3">Bank Account</th>
+                <th className="px-4 py-3">Salary</th>
+                <th className="px-4 py-3">Pay</th>
+                <th className="px-4 py-3">Details</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {employees.map((emp, idx) => (
+                <tr key={emp._id + idx} className="hover:bg-gray-800/50">
+                  <td className="px-4 py-3 font-medium whitespace-nowrap">
+                    {emp.name}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">{emp.email}</td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => handleVerifyToggle(emp)}
+                      className="text-xl"
+                    >
+                      {emp.isVerified ? "✅" : "❌"}
+                    </button>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {emp.bank_account_no || emp.bankAccountNo || "-"}
+                  </td>
+                  <td className="px-4 py-3">{emp.Salary}৳</td>
+                  <td className="px-4 py-3">
+                    <Button
+                      size="sm"
+                      disabled={!emp.isVerified}
+                      className={`${!emp.isVerified ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      onClick={() => handlePayClick(emp)}
+                    >
+                      Pay
+                    </Button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Button onClick={() => handleViewDetails(emp.email)} size="sm" variant="outline">
+                      View
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {/* Pay Salary Modal */}
@@ -204,12 +204,27 @@ export default function EmployeeList() {
               value={selectedEmployee?.Salary || ""}
               disabled
             />
-            <Input
-              placeholder="Month (e.g. July)"
+            <select
               value={month}
               onChange={(e) => setMonth(e.target.value)}
               required
-            />
+              className="border rounded p-2 w-full dark:bg-[#0a0a0a]"
+            >
+              <option value="">Select Month</option>
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+
             <Input
               placeholder="Year (e.g. 2025)"
               value={year}

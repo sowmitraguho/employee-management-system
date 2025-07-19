@@ -15,7 +15,7 @@ const DashboardSidebar = ({ role }) => {
   ];
 
   const adminLinks = [
-    { to: "/dashboard/all-employee-list", label: "All Employees", icon: <FaUserCheck /> },
+    { to: "/dashboard/adminemployeelist", label: "All Employees", icon: <FaUserCheck /> },
     { to: "/dashboard/payroll", label: "Payroll", icon: <FaMoneyCheck /> },
   ];
 
