@@ -49,7 +49,7 @@ function RotatingCube() {
 
 export default function ServicesSection() {
   return (
-    <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
+    <section className="py-16 px-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center  gap-12">
         {/* Left side: Services */}
         <div className="flex-1 text-center lg:text-left">

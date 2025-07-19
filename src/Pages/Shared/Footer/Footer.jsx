@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import Lottie from "lottie-react";
-import footerAnim from "../../../../public/Footer cat.json"; 
+import footerAnim from "../../../../public/services.json"; 
 import { CompanyLogo } from "../../../Components/CompanyLogo/CompanyLogo";
 
 export default function Footer() {

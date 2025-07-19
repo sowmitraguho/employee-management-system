@@ -8,6 +8,7 @@ import TestimonialSection from "./TestimonialSection";
 import PricingSection from "./PricingSection";
 import MessageUsSection from "./MessageUsSection";
 import Footer from "../Shared/Footer/Footer";
+import CompanyLogoSlider from "./CompanyLogoSlider";
 
 export default function HomePage() {
   return (
@@ -16,8 +17,10 @@ export default function HomePage() {
       <HeroSection/>
 
       {/* ✅ About Section */}
-     
       <AboutSection/>
+
+       {/* Company Logo Slider Section */}
+      <CompanyLogoSlider/>
 
       {/* ✅ Services Section */}
       {/* <section className="py-16 px-6 bg-white dark:bg-gray-950">
