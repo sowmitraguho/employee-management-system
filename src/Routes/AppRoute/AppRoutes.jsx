@@ -14,6 +14,7 @@ import EmployeeDetails from "../../Pages/HRSection/EmployeeDetails/EmployeeDetai
 import ProgressPage from "../../Pages/HRSection/Progress/ProgressPage"
 import AdminEmployeesPage from "../../Pages/AdminSection/AllEmployeeList/AdminEmployeesPage"
 import PayrollPage from "../../Pages/AdminSection/PayrollPage/PayrollPage"
+import ContactUs from "../../Pages/ContactUs/ContasctUs"
 
 const routes = createBrowserRouter([
     {
@@ -22,6 +23,7 @@ const routes = createBrowserRouter([
         children: [
             { index: true, Component: Home },
             { path: "about", Component: About },
+            { path: "contactus", Component: ContactUs },
             { path: "register", Component: Register },
             { path: "login", Component: SignIn },
         ]

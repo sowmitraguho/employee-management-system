@@ -2,14 +2,17 @@ import React, { useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import Lottie from "lottie-react";
-import contactAnim from '../../../public/Email.json'
+import contactAnim from "../../../public/Email.json";
 
 export default function MessageUsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-50px" });
 
   return (
-    <section ref={ref} className="py-20 px-6 bg-gray-50 dark:bg-gray-900">
+    <section
+      ref={ref}
+      className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
+    >
       <AnimatePresence>
         {isInView && (
           <motion.div
@@ -17,40 +20,47 @@ export default function MessageUsSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-6xl mx-auto grid gap-12 lg:grid-cols-2 items-center"
+            className="max-w-6xl mx-auto grid gap-12 lg:grid-cols-2 sm:grid-cols-1 items-center"
           >
             {/* LEFT: Heading + Contact Info */}
             <motion.div
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col gap-6"
             >
-              <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-4">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
                 Message Us
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-8">
+              <p className="text-gray-600 dark:text-gray-300 max-w-md">
                 Got questions or feedback? Reach out to us anytime. We’d love to
                 hear from you!
               </p>
 
-              {/* Contact info */}
-              <div className="flex">
-            <div className="space-y-4">
-            <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-              <FaEnvelope className="text-indigo-500" /> support@company.com
-            </div>
-            <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-              <FaPhoneAlt className="text-green-500" /> +1 (234) 567-890
-            </div>
-            <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-              <FaMapMarkerAlt className="text-pink-500" /> 123 Business St, New York, USA
-            </div>
-          </div>
-           {/* ✅ Lottie Animation */}
-          <div className="w-72 h-72 mb-6">
-            <Lottie animationData={contactAnim} loop={true} />
-          </div>
-          </div>
+              {/* ✅ Contact Info + Lottie side-by-side on large, stacked on mobile */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                {/* Contact info */}
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                    <FaEnvelope className="text-indigo-500" />
+                    <span className="truncate">support@company.com</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                    <FaPhoneAlt className="text-green-500" /> +1 (234) 567-890
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                    <FaMapMarkerAlt className="text-pink-500" />
+                    123 Business St, New York, USA
+                  </div>
+                </div>
+
+                {/* ✅ Lottie Animation - responsive size */}
+                <div className="flex justify-center sm:justify-end">
+                  <div className="w-40 h-40 sm:w-56 sm:h-56 lg:w-72 lg:h-72">
+                    <Lottie animationData={contactAnim} loop={true} />
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* RIGHT: Contact Form */}
@@ -58,9 +68,10 @@ export default function MessageUsSection() {
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col gap-4"
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 flex flex-col gap-4"
               onSubmit={(e) => e.preventDefault()}
             >
+              {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Name
@@ -73,6 +84,7 @@ export default function MessageUsSection() {
                 />
               </div>
 
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Email
@@ -85,6 +97,7 @@ export default function MessageUsSection() {
                 />
               </div>
 
+              {/* Message */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Message
@@ -97,7 +110,7 @@ export default function MessageUsSection() {
                 />
               </div>
 
-              {/* Submit button with hover animation */}
+              {/* ✅ Submit button with hover animation */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
