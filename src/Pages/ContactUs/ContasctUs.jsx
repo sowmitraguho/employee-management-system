@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import contactAnim from "../../../public/Email.json"; // your lottie file
+import contactAnim from "../../assets/Lottifiles/Email.json"; // your lottie file
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

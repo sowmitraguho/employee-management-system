@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import Lottie from "lottie-react";
-import contactAnim from "../../../public/Email.json";
+import contactAnim from "../../assets/Lottifiles/Email.json";
 
 export default function MessageUsSection() {
   const ref = useRef(null);

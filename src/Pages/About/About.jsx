@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import aboutAnim from "../../../public/About.json";
+import aboutAnim from "../../assets/Lottifiles/about.json";
 import { FaUsers, FaBullseye, FaLightbulb } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
