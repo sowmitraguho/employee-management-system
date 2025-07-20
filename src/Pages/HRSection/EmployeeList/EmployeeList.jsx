@@ -15,7 +15,8 @@ import axios from "axios";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 
 const fetchEmployees = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/users?role=Employee`);
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/users?role=employee`);
+  console.log('employees',res);
   return res.json();
 };
 
@@ -151,7 +152,7 @@ export default function EmployeeList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
-              {employees.map((emp, idx) => (
+              {employees?.map((emp, idx) => (
                 <tr key={emp._id + idx} className="hover:bg-gray-800/50">
                   <td className="px-4 py-3 font-medium whitespace-nowrap">
                     {emp.name}

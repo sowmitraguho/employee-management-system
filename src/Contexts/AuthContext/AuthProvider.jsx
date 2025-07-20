@@ -3,14 +3,30 @@ import { AuthContext } from './AuthContext';
 import { useEffect, useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../../../firebase.init';
+import axios from 'axios';
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
 
     const provider = new GoogleAuthProvider();
 
     const [loading, setLoading] = useState(true);
 
     const [loggedInUser, setLoggedInUser] = useState(auth.currentUser);
+
+    const sendTokenToBackend = async (firebaseUser) => {
+        const userToken = await firebaseUser.getIdToken();
+        console.log('userToken', userToken);
+        localStorage.setItem("authToken", userToken);
+        document.cookie = `authToken=${userToken}; path=/; max-age=604800; Secure; SameSite=Strict`;
+        // Send token to backend
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`,
+            },
+        });
+        console.log("Backend response:", res.data);
+
+    }
 
     const createUser = (email, password) => {
         setLoading(true);
@@ -27,23 +43,29 @@ const AuthProvider = ({children}) => {
     }
     const googleSignIn = () => {
         setLoading(true);
-        signInWithPopup(auth, provider);
+        return signInWithPopup(auth, provider);
     }
 
-    
+
 
     const logOut = () => {
         setLoading(true);
         return signOut(auth);
     }
 
-    useEffect(()=>{
-        const UnSubscribe = onAuthStateChanged(auth, currentUser => {
+    useEffect(() => {
+        const UnSubscribe = onAuthStateChanged(auth, async(currentUser) => {
             //console.log('inside useeffect after auth state changed', currentUser);
             setLoggedInUser(currentUser);
             setLoading(false);
+            // const userToken = currentUser?.accessToken;
+            if (currentUser) {
+                await sendTokenToBackend(currentUser);
+            } else {
+                localStorage.removeItem("authToken"); // remove token on logout
+            }
         });
-        return ()=> {
+        return () => {
             UnSubscribe();
         }
     }, [])

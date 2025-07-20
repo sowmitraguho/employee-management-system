@@ -11,9 +11,10 @@ import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import Swal from "sweetalert2";
 import useAxios from "../../Hooks/useAxios";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const Register = () => {
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -24,45 +25,52 @@ const Register = () => {
     designation: "Representative",
     salary: "55000",
     bankAccountNo: "AC25647894566",
-    photoURL: ""
+    photoURL: "",
   });
+
   const baseURL = import.meta.env.VITE_API_URL;
   const { createUser, googleSignIn, updateUser } = useContext(AuthContext);
   const { postData } = useAxios(baseURL);
   const navigate = useNavigate();
 
-  //formdata collection
+  // handle text inputs
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  //image upload
+  // image upload
   const handleImageChange = async (e) => {
     setImageFile(e.target.files[0]);
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
+    formData.append("image", e.target.files[0]);
     try {
-      //image upload to imgbb
-      const response = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbbApiKey}`, formData);
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_imgbbApiKey
+        }`,
+        formData
+      );
       if (!response) return;
       setImageUrl(response.data.data.display_url);
-      console.log('Image uploaded:', response.data.data.display_url);
     } catch (err) {
-      console.error('Image upload error:', error);
       Swal.fire({
         title: err.message,
         icon: "error",
-        draggable: true
+        draggable: true,
       });
     }
   };
 
-  //password check
+  // password validation
   const validatePassword = (password) => {
-    return /[A-Z]/.test(password) && /[^a-zA-Z0-9]/.test(password) && password.length >= 6;
+    return (
+      /[A-Z]/.test(password) &&
+      /[^a-zA-Z0-9]/.test(password) &&
+      password.length >= 6
+    );
   };
 
-
+  // register submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -73,192 +81,243 @@ const Register = () => {
     }
 
     if (!validatePassword(form.password)) {
-      setError("Password must be 6+ chars, include 1 capital & 1 special char.");
+      setError(
+        "Password must be 6+ chars, include 1 capital & 1 special char."
+      );
       return;
     }
-    //console.log('all form data',form);
+
     try {
       const registeredUser = await createUser(form.email, form.password);
       const currentUser = registeredUser.user;
-      console.log(currentUser);
+
       if (currentUser.uid) {
-        const updatedUserData = { displayName: form.name, photoURL: imageUrl };
-        //firebase registration
-        updateUser(updatedUserData)
-          .then(async () => {
-            //upload user data in mongodb
-            const fullForm = { ...form, imageUrl }
-            const result = await postData('users', fullForm);
-            if (result) {
-              console.log('User created:', result);
-            }
-            // success alert
-            await Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Registration Successful!",
-              showConfirmButton: false,
-              timer: 1500
-            });
-            navigate('/');
-          })
-        
+        const updatedUserData = {
+          displayName: form.name,
+          photoURL: imageUrl,
+        };
+
+        updateUser(updatedUserData).then(async () => {
+          const fullForm = { ...form, imageUrl };
+          const result = await postData("users", fullForm);
+          if (result) console.log("User created:", result);
+
+          await Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Registration Successful!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/");
+        });
       }
     } catch (err) {
       setError(err.message);
     }
   };
-  //signinwith google
+
+  // google sign in
   const handleGoogleSignIn = async () => {
     setError("");
     try {
       const result = await googleSignIn();
       const currentUser = result.user;
-      console.log('current user google signin:', currentUser);
 
-      //userinfo upload to mongdb
       if (currentUser) {
-        await postData('/users', {
+        await postData("/users", {
           name: currentUser.displayName,
           email: currentUser.email,
           photoURL: currentUser.photoURL,
-          role: 'employee', // or prompt/assign default
+          role: "employee",
           designation: "Representative",
         });
-        // success toast
+
         await Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Registration Successfull!",
+          title: "Registration Successful!",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       }
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   return (
-    <div className="p-20">
-      <div className="min-h-screen max-w-7xl flex items-center justify-around bg-gray-50 dark:bg-gray-950">
-        <div className="flex-1 w-full bg-white dark:bg-gray-900 shadow-md rounded-lg ">
-          {/* Left Side - Register Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            <h2 className="text-2xl font-bold text-center">Create an Account</h2>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 shadow-xl rounded-2xl overflow-hidden bg-white dark:bg-gray-900"
+      >
+        {/* Left Section - Register Form */}
+        <div className="p-8 sm:p-10 space-y-6">
+          <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100">
+            Create an Account
+          </h2>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Your Full Name</Label>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name */}
+            <div>
+              <Label className='mb-2'>Your Full Name</Label>
               <Input type="text" name="name" required onChange={handleChange} />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="role">Select Role</Label>
+            {/* Role */}
+            <div>
+              <Label className='mb-2'>Select Role</Label>
               <select
                 name="role"
                 required
                 onChange={handleChange}
-                className="w-full mt-1 rounded border px-3 py-2 dark:bg-gray-800"
+                className="w-full mt-1 rounded-md border px-3 py-2 dark:bg-gray-800 dark:border-gray-700"
               >
                 <option value="">-- Select Role --</option>
                 <option value="employee">Employee</option>
                 <option value="hr">HR</option>
-                {/* Do NOT allow Admin registration from frontend */}
               </select>
             </div>
 
-            {(form.role == 'employee') && <div className="flex flex-col gap-2">
-              <Label htmlFor="Designation">Designation</Label>
-              <select
-                name="Designation"
+            {/* Designation only for Employee */}
+            {form.role === "employee" && (
+              <div>
+                <Label className='mb-2'>Designation</Label>
+                <select
+                  name="designation"
+                  required
+                  onChange={handleChange}
+                  className="w-full mt-1 rounded-md border px-3 py-2 dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <option value="">-- Select Designation --</option>
+                  <option value="software_engineer">Software Engineer</option>
+                  <option value="frontend_developer">
+                    Frontend Developer
+                  </option>
+                  <option value="backend_developer">Backend Developer</option>
+                  <option value="fullstack_developer">
+                    Full Stack Developer
+                  </option>
+                  <option value="ui_ux_designer">UI/UX Designer</option>
+                  <option value="qa_engineer">QA Engineer</option>
+                  <option value="project_manager">Project Manager</option>
+                  <option value="product_manager">Product Manager</option>
+                  <option value="devops_engineer">DevOps Engineer</option>
+                  <option value="team_lead">Team Lead</option>
+                </select>
+              </div>
+            )}
+
+            {/* Bank Account */}
+            <div>
+              <Label className='mb-2'>Bank Account No</Label>
+              <Input
+                type="text"
+                name="bankAccountNo"
                 required
                 onChange={handleChange}
-                className="w-full mt-1 rounded border px-3 py-2 dark:bg-gray-800"
-              >
-                <option value="">-- Select Designation --</option>
-                <option value="software_engineer">Software Engineer</option>
-                <option value="frontend_developer">Frontend Developer</option>
-                <option value="backend_developer">Backend Developer</option>
-                <option value="fullstack_developer">Full Stack Developer</option>
-                <option value="ui_ux_designer">UI/UX Designer</option>
-                <option value="qa_engineer">QA Engineer</option>
-                <option value="project_manager">Project Manager</option>
-                <option value="product_manager">Product Manager</option>
-                <option value="devops_engineer">DevOps Engineer</option>
-                <option value="team_lead">Team Lead</option>
-
-                {/* Do NOT allow Admin registration from frontend */}
-              </select>
-            </div>}
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="bank_account_no">Bank Account No</Label>
-              <Input type="text" name="bank_account_no" required onChange={handleChange} />
+              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="Salary">Salary</Label>
-              <Input type="text" name="Salary" required onChange={handleChange} />
+            {/* Salary */}
+            <div>
+              <Label className='mb-2'>Salary</Label>
+              <Input
+                type="text"
+                name="salary"
+                required
+                onChange={handleChange}
+              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="imageFile">Upload Your Image</Label>
-              <input className="border border-gray-200 p-2 rounded-sm dark:border-gray-700" type="file" accept="image/*" onChange={handleImageChange} required />
-
+            {/* Image Upload */}
+            <div>
+              <Label className='mb-2'>Upload Your Image</Label>
+              <input
+                className="border border-gray-300 p-2 rounded-md w-full dark:border-gray-700"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+              />
             </div>
 
-
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input type="email" name="email" required onChange={handleChange} />
+            {/* Email */}
+            <div>
+              <Label className='mb-2'>Email</Label>
+              <Input
+                type="email"
+                name="email"
+                required
+                onChange={handleChange}
+              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input type="password" name="password" required onChange={handleChange} />
+            {/* Password */}
+            <div>
+              <Label className='mb-2'>Password</Label>
+              <Input
+                type="password"
+                name="password"
+                required
+                onChange={handleChange}
+              />
             </div>
 
-            {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+            {/* Error */}
+            {error && (
+              <p className="text-sm text-red-500 text-center">{error}</p>
+            )}
 
-            <Button type="submit" className="w-full">
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-indigo-500 hover:to-blue-500"
+            >
               Register
             </Button>
-
-            <div className="text-center text-sm">Or sign up with</div>
-
-            <div className="">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full flex items-center justify-center gap-2 mb-2"
-                onClick={handleGoogleSignIn}
-              >
-                <FcGoogle size={20} /> Google
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full flex items-center justify-center gap-2"
-              // onClick={signInWithLinkedIn}
-              >
-                <FaLinkedin size={20} className="text-blue-700" /> LinkedIn
-              </Button>
-            </div>
-
-            <p className="text-xs text-center">
-              Already have an account?{" "}
-              <Link to="/login" className="text-blue-500 hover:underline">
-                Login here
-              </Link>
-            </p>
           </form>
+
+          {/* Social Sign-up */}
+          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+            Or sign up with
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 flex items-center justify-center gap-2"
+              onClick={handleGoogleSignIn}
+            >
+              <FcGoogle size={20} /> Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 flex items-center justify-center gap-2"
+            >
+              <FaLinkedin size={20} className="text-blue-700" /> LinkedIn
+            </Button>
+          </div>
+
+          {/* Login Link */}
+          <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login here
+            </Link>
+          </p>
         </div>
-        {/* Right Side - Lottie Animation */}
-        <div className="p-6 hidden md:flex flex-1 items-center justify-center ">
-          <Lottie animationData={registerAnimation} loop={true} className="w-80 h-80" />
+
+        {/* Right Section - Lottie Animation */}
+        <div className="hidden md:flex items-center justify-center bg-gradient-to-tr from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-6">
+          <Lottie animationData={registerAnimation} loop className="w-72 h-72" />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

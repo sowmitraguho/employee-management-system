@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -20,7 +21,7 @@ export default function AdminEmployeesPage() {
   // ✅ Fetch all verified users
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
+      const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
       console.log('fetched employee for admin', res.data);
       setEmployees(res.data || []);
     } catch (err) {
