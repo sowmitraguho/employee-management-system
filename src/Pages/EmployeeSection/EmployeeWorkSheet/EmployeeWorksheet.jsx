@@ -5,12 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
 import useAxiosGetData from '../../../Hooks/useAxiosGetData';
 import useAxios from '../../../Hooks/useAxios';
 import { FaRegEdit } from "react-icons/fa";
 import Swal from 'sweetalert2';
+
 
 
 const EmployeeWorksheet = () => {
@@ -19,6 +19,8 @@ const EmployeeWorksheet = () => {
     const [works, setWorks] = useState([]);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
+    const [startDate, setStartDate] = useState(new Date());
+    const [completionDate, setCompletionDate] = useState(new Date());
 
     //required data and fuction
     const { loggedInUser } = useContext(AuthContext);
@@ -43,7 +45,7 @@ const EmployeeWorksheet = () => {
         if (loggedInUser?.email) {
             fetchWorks();
         }
-    }, [loggedInUser.email])
+    }, [])
 
     //add new work to database
     const handleAddWork = async (e) => {
@@ -92,11 +94,11 @@ const EmployeeWorksheet = () => {
         console.log(updatedData);
         try {
 
-            await putData(`/works/${_id}`, updatedData);
+            const result = await putData(`/works/${_id}`, updatedData);
 
             // ✅ Update local state without refetch
             const res = await getWorksByEmail(loggedInUser.email);
-            console.log('after data edit', res);
+            console.log('after data edit', result, res);
 
             setWorks(res);
 
@@ -138,6 +140,7 @@ const EmployeeWorksheet = () => {
 
     return (
         <div>
+            
             <div className="p-6 space-y-6">
                 {/* Form in a single row */}
                 <div className="shadow-md p-4 rounded-sm border border-blue-300 dark:border-gray-600">
@@ -178,12 +181,10 @@ const EmployeeWorksheet = () => {
                             >
                                 Assigned Date
                             </label>
-                            <input
-                                id="assignedDate"
-                                type="date"
-                                name="assignedDate"
-                                className="border rounded-md p-2"
-                            />
+                            
+                            <DatePicker id="assignedDate" name="assignedDate"
+                                className="border rounded-md p-2" selected={startDate} onChange={(date) => setStartDate(date)} />
+                            
                         </div>
 
                         {/* ✅ Completion Date */}
@@ -194,12 +195,9 @@ const EmployeeWorksheet = () => {
                             >
                                 Completion Date
                             </label>
-                            <input
-                                id="completionDate"
-                                type="date"
-                                name="completionDate"
-                                className="border rounded-md p-2"
-                            />
+                            
+                            <DatePicker id="completionDate" name="completionDate"
+                                className="border rounded-md p-2" selected={completionDate} onChange={(date) => setCompletionDate(date)} />
                         </div>
 
                         {/* ✅ Hours Worked */}

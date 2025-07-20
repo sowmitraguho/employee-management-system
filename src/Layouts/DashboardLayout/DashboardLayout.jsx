@@ -4,6 +4,7 @@ import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import DashboardSidebar from "../../Pages/Shared/DashboardSidebar/DashboardSidebar";
 import useAxiosGetData from "../../Hooks/useAxiosGetData";
 import Spinner from "../../Components/Spinner/Spinner"
+import UserProfile from "../../Pages/Dashboard/UserProfile";
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const DashboardLayout = () => {
         try {
           const data = await getUserByEmail(loggedInUser.email);
           console.log(data);
-          setRole(data); // role should be "employee", "hr", or "admin"
+          setRole(data.role); // role should be "employee", "hr", or "admin"
         } catch (error) {
           console.error("Error fetching role:", error);
           setRole(null);
@@ -46,6 +47,7 @@ const DashboardLayout = () => {
     <div className="min-h-screen flex">
       <DashboardSidebar role={role} />
       <main className="flex-1 p-4 bg-muted/40 dark:bg-gray-950">
+      <UserProfile/>
         <Outlet context={{ role }} />
       </main>
     </div>

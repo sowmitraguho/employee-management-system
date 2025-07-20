@@ -5,15 +5,14 @@ export default function CompanyLogoSlider() {
 
     const logos = [
   "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png",
   "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
   "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
   "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/0/0e/Meta_Platforms_Inc._logo.svg",
+ 
   "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg",
   "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/9/98/Adobe_logo.svg"
+  "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+  
 ];
 
 
@@ -33,7 +32,7 @@ export default function CompanyLogoSlider() {
                 {/* Moving track */}
                 <motion.div
                     className="flex gap-10 sm:gap-16 md:gap-24"
-                    animate={{ x: ["0%", "-50%"] }}
+                    animate={{ x: ["0%", "-50%", '0%'] }}
                     transition={{
                         duration: 20, // slow & smooth
                         ease: "linear",
@@ -47,7 +46,7 @@ export default function CompanyLogoSlider() {
                             key={idx}
                             src={logo}
                             alt={`Company logo ${idx}`}
-                            className="h-8 sm:h-10 md:h-14 lg:h-16 object-contain filter dark:invert-0"
+                            className="w-16 h-8 sm:h-10 md:h-12 lg:h-16 object-contain filter dark:invert-0"
                         />
                     ))}
                 </motion.div>

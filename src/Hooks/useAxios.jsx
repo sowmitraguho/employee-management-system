@@ -13,7 +13,7 @@ const useAxios = (baseURL) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(`${baseURL}/${url}`, data, config);
+      const res = await axios.post(`${baseURL}${url}`, data, config);
       setResponse(res.data);
       console.log('inside hook',res.data);
       return res.data;
@@ -30,7 +30,7 @@ const useAxios = (baseURL) => {
     setLoading(true);
     setError(null);
     try {
-        const res = await axios.post(`${baseURL}${url}`, data, config);
+        const res = await axios.put(`${baseURL}${url}`, data, config);
         setResponse(res.data);
         console.log('data putting result', res);
         return res.data;

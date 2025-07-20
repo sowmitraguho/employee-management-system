@@ -14,7 +14,7 @@ const useAxiosGetData = () => {
     try {
       const result = await axiosInstance.get(`/users/${email}`);
       console.log('data by email from hook', result.data.role);
-      return result.data.role; // returns {role, name, ...}
+      return result.data; // returns {role, name, ...}
     } catch (error) {
       console.error("Failed to fetch user by email:", error.response?.data || error.message);
       return null;
