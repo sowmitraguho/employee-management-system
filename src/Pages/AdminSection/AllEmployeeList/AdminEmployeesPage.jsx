@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import useProtectedAxios from "../../../Hooks/useProtectedAxios";
+import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -17,7 +18,7 @@ export default function AdminEmployeesPage() {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [newSalary, setNewSalary] = useState("");
-
+  const { loggedInUser } = useContext(AuthContext);
   // ✅ Fetch all verified users
   const fetchEmployees = async () => {
     try {
@@ -37,8 +38,14 @@ export default function AdminEmployeesPage() {
 
   // ✅ Fire an employee
   const fireEmployee = async (userId) => {
+    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/fire`, {}, { withCredentials: true });
+      await axios.patch(`${baseURL}/vfusers/${userId}/fire`, {}, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ Attach token here
+          },
+        });
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, status: "fired" } : emp
@@ -51,8 +58,14 @@ export default function AdminEmployeesPage() {
 
   // ✅ Make Employee HR
   const makeHR = async (userId) => {
+    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/makeHR`, {}, { withCredentials: true });
+      await axios.patch(`${baseURL}/vfusers/${userId}/makeHR`, {}, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ Attach token here
+          },
+        });
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, role: "HR" } : emp
@@ -67,13 +80,20 @@ export default function AdminEmployeesPage() {
   const updateSalary = async (userId) => {
     if (!newSalary || isNaN(newSalary)) return alert("Enter a valid salary");
     console.log('newsalary before update', newSalary);
+
+    // ✅ Get fresh Firebase token
+    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
     try {
       await axios.patch(
         `${baseURL}/vfusers/${userId}/salary`,
-        { Salary: Number(newSalary) },  // ✅ Always send as string
-        { withCredentials: true }
+        { Salary: Number(newSalary) }, // ✅ Send numeric salary
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ Attach token here
+          },
+        }
       );
-
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, Salary: Number(newSalary) } : emp
@@ -127,7 +147,7 @@ export default function AdminEmployeesPage() {
                     >
                       Make HR
                     </Button>
-                  ) : emp.role === "hr" ? (
+                  ) : emp.role === "hr" && emp.status !== "fired" ? (
                     <span className="text-green-600 font-medium">Already HR</span>
                   ) : (
                     "-"

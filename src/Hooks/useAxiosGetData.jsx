@@ -30,7 +30,7 @@ const useAxiosGetData = () => {
     if (!email) return null;
     try {
       const result = await axiosInstance.get(`/users/${email}`);
-      console.log("data by email from hook", result.data.role);
+      //console.log("data by email from hook", result.data.role);
       return result.data;
     } catch (error) {
       console.error(
@@ -46,7 +46,7 @@ const useAxiosGetData = () => {
     if (!email) return null;
     try {
       const result = await axiosInstance.get(`works?email=${email}`);
-      console.log("data by email from hook", result.data);
+     // console.log("data by email from hook", result.data);
       return result.data;
     } catch (error) {
       console.error(
@@ -61,7 +61,7 @@ const useAxiosGetData = () => {
 const getAllWorks = async () => {
   try {
     const result = await axiosInstance.get("works"); // just hit the works endpoint
-    console.log("all works from hook", result.data);
+    //console.log("all works from hook", result.data);
     return result.data;
   } catch (error) {
     console.error(
@@ -78,7 +78,7 @@ const getAllWorks = async () => {
     if (!email) return null;
     try {
       const result = await axiosInstance.get(`/payments/${email}`);
-      console.log("data by email from hook", result);
+      //console.log("data by email from hook", result);
       return result.data;
     } catch (error) {
       console.error(

@@ -11,15 +11,24 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
+import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 
 
 const fetchPayments = async (email, page) => {
-  const res = await fetch(`https://employee-management-system-server-3k7l.onrender.com/payments/${email}?page=${page}&limit=5`, {
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Failed to fetch payment history");
-  return res.json();
+  try {
+    const res = await useProtectedAxios.get(
+      `payments/${email}?page=${page}&limit=5`
+    );
+    console.log("Payment data:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    throw error; // or return null / empty object if preferred
+  }
 };
+
+
+
 
 export default function PaymentHistory() {
   const { loggedInUser } = useContext(AuthContext) // your logged-in user

@@ -19,7 +19,7 @@ const DashboardLayout = () => {
       if (loggedInUser?.email) {
         try {
           const data = await getUserByEmail(loggedInUser.email);
-          console.log(data);
+         // console.log(data);
           setRole(data.role);
         } catch (error) {
           console.error("Error fetching role:", error);

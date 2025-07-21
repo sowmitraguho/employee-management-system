@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
 
     const sendTokenToBackend = async (firebaseUser) => {
         const userToken = await firebaseUser.getIdToken();
-        console.log('userToken', userToken);
+        //console.log('userToken', userToken);
         localStorage.setItem("authToken", userToken);
         document.cookie = `authToken=${userToken}; path=/; max-age=604800; Secure; SameSite=Strict`;
         // Send token to backend
@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
                 Authorization: `Bearer ${userToken}`,
             },
         });
-        console.log("Backend response:", res.data);
+        //console.log("Backend response:", res.data);
 
     }
 
@@ -57,13 +57,14 @@ const AuthProvider = ({ children }) => {
         const UnSubscribe = onAuthStateChanged(auth, async(currentUser) => {
             //console.log('inside useeffect after auth state changed', currentUser);
             setLoggedInUser(currentUser);
-            setLoading(false);
+            //setLoading(false);
             // const userToken = currentUser?.accessToken;
             if (currentUser) {
                 await sendTokenToBackend(currentUser);
             } else {
                 localStorage.removeItem("authToken"); // remove token on logout
             }
+            setLoading(false);
         });
         return () => {
             UnSubscribe();

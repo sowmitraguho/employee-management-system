@@ -63,8 +63,8 @@ export default function EmployeeProfile() {
     >
       {/* ✅ Performance Graph */}
       <Card className="dark:bg-gray-900 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <CardHeader className='bg-gradient-to-r from-indigo-500 to-purple-500'>
+          <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
             Performance Overview
           </CardTitle>
         </CardHeader>
@@ -83,8 +83,8 @@ export default function EmployeeProfile() {
 
       {/* ✅ Works / Projects */}
       <Card className="dark:bg-gray-900 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500">
+          <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
             Recent Works & Projects
           </CardTitle>
         </CardHeader>
@@ -114,8 +114,8 @@ export default function EmployeeProfile() {
 
       {/* ✅ Skills Section */}
       <Card className="dark:bg-gray-900 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500">
+          <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
             Skills & Expertise
           </CardTitle>
         </CardHeader>
@@ -134,8 +134,8 @@ export default function EmployeeProfile() {
 
       {/* ✅ Certifications */}
       <Card className="dark:bg-gray-900 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-500">
+          <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
             Certifications
           </CardTitle>
         </CardHeader>
@@ -150,8 +150,8 @@ export default function EmployeeProfile() {
 
       {/* ✅ HR & Admin Reviews */}
       <Card className="dark:bg-gray-900 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <CardHeader className="bg-gradient-to-r from-purple-500 to-fuchsia-500">
+          <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
             HR & Admin Reviews
           </CardTitle>
         </CardHeader>

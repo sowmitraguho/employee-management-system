@@ -120,18 +120,31 @@ const EmployeeWorksheet = () => {
           <div>
             <label className="text-sm font-medium block mb-1">Work Name</label>
             <select
-              name="workName"
-              className="border rounded-md w-full p-2 dark:bg-gray-800 dark:text-gray-100"
-            >
-              {works?.map((w) => (
-                <option key={w._id} value={w.workName}>
-                  {w.workName}
-                </option>
-              ))}
-              <option value="New Feature Development">New Feature Development</option>
-              <option value="UI Redesign">UI Redesign</option>
-              <option value="API Integration">API Integration</option>
-            </select>
+  name="workName"
+  className="border rounded-md w-full p-2 dark:bg-gray-800 dark:text-gray-100"
+>
+  {works?.map((w) => (
+    <option key={w._id} value={w.workName}>
+      {w.workName}
+    </option>
+  ))}
+
+  {/* ✅ Predefined IT-related tasks */}
+  <option value="New Feature Development">New Feature Development</option>
+  <option value="UI Redesign">UI Redesign</option>
+  <option value="API Integration">API Integration</option>
+  <option value="Bug Fixing & Debugging">Bug Fixing & Debugging</option>
+  <option value="Database Optimization">Database Optimization</option>
+  <option value="Security Patch Implementation">Security Patch Implementation</option>
+  <option value="Performance Tuning">Performance Tuning</option>
+  <option value="Cloud Deployment">Cloud Deployment</option>
+  <option value="Automated Testing Setup">Automated Testing Setup</option>
+  <option value="DevOps Pipeline Configuration">DevOps Pipeline Configuration</option>
+  <option value="Third-Party Service Integration">Third-Party Service Integration</option>
+  <option value="Documentation Update">Documentation Update</option>
+  <option value="Version Upgrade & Migration">Version Upgrade & Migration</option>
+</select>
+
           </div>
 
           {/* Assigned Date */}
@@ -219,7 +232,7 @@ const EmployeeWorksheet = () => {
               </tr>
             </thead>
             <tbody>
-              {[...works].reverse().map((work) => (
+              {works.map((work) => (
                 <tr
                   key={work._id}
                   className="border-t dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
