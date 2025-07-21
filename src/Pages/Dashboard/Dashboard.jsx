@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { AuthContext } from "@/Contexts/AuthContext/AuthContext";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import adminLottie from "../../assets/Lottifiles/admin.json";
-//import hrLottie from "../../assets/Lottifiles/admin.json"; // Replace with your Lottie JSON
 import {
     PieChart, Pie, Cell, Tooltip,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
@@ -13,7 +12,6 @@ import { useOutletContext } from "react-router";
 import useProtectedAxios from "../../Hooks/useProtectedAxios";
 import EmployeeProfile from "../EmployeeSection/EmployeeProfile/EmployeeProfile";
 
-// Dummy chart data (you can fetch from API)
 
 // helper function to prepare stats for admin dashboard
 const prepareAdminStats = (employees) => {
@@ -56,8 +54,7 @@ const COLORS = ["#4ade80", "#facc15", "#f87171", "#60a5fa"];
 const baseURL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
-    //const { loggedInUser } = useContext(AuthContext); 
-    //const role = user?.role || "employee"; // employee | hr | admin
+   
     const [allEmployees, setAllEmployees] = useState([]);
     const [employees, setEmployees] = useState([]);
     
@@ -197,12 +194,13 @@ const Dashboard = () => {
         }));
         return (
     
-            <div className="grid gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-col gap-4">
                 <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
                     Admin Dashboard Overview
                 </h1>
                 {/* Total Employees Card */}
-                <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                    <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-xl">
                     <CardHeader>
                         <CardTitle>Total Employees</CardTitle>
                     </CardHeader>
@@ -293,6 +291,7 @@ const Dashboard = () => {
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
+                </div>
 
             </div>
 

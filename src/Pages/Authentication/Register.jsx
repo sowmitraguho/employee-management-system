@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Lottie from "lottie-react";
-import registerAnimation from "@/assets/Lottifiles/register-lottie.json";
+import registerAnimation from "../../assets/Lottifiles/register-lottie.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
