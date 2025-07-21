@@ -5,12 +5,15 @@ import useAxiosGetData from "../../Hooks/useAxiosGetData"
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext"
 import userAnim from "../../assets/Lottifiles/user.json"
 import Lottie from "lottie-react"
+import { Button } from "@/components/ui/button"
+import { HiOutlineLogout } from "react-icons/hi"
 
 export default function UserProfile() {
-  const { loggedInUser } = useContext(AuthContext)
-  const [userData, setUserData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const { getUserByEmail } = useAxiosGetData()
+  const { loggedInUser, logOut} = useContext(AuthContext);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { getUserByEmail } = useAxiosGetData();
+  
 
   useEffect(() => {
     if (!loggedInUser?.email) return
@@ -51,7 +54,8 @@ export default function UserProfile() {
   }
 
   return (
-    <Card className="flex flex-row items-center justify-between gap-6 p-6 shadow-lg dark:bg-gray-900">
+    <Card className="relative flex flex-row items-center justify-between gap-6 p-6 shadow-lg dark:bg-gray-900">
+      
       {/* Left Section: Profile Image + Info */}
       <div className="flex flex-row items-center gap-6 flex-1">
         <img
@@ -70,7 +74,9 @@ export default function UserProfile() {
           <p className="text-gray-600 dark:text-gray-300 capitalize">
             {userData.Designation?.replace("_", " ")}
           </p>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">{userData.email}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
+            {userData.email}
+          </p>
 
           {/* Extra Info */}
           <div className="mt-3 flex flex-wrap justify-center md:justify-start gap-2 text-sm">
@@ -86,14 +92,31 @@ export default function UserProfile() {
               </span>
             )}
           </div>
+          {/* Logout Button */}
+        <Button
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 shadow-md transition-all duration-300"
+          onClick={() => logOut()}
+        >
+          <HiOutlineLogout className="text-lg" />
+          Logout
+        </Button>
         </div>
+        
       </div>
 
       {/* Right Section: Lottie Animation */}
-      <div className="flex justify-center md:justify-end w-full md:w-auto">
+      
+      <div className="flex flex-col items-center gap-3">
+       
         <div className="bg-gradient-to-tr from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4">
-          <Lottie animationData={userAnim} loop className="w-28 h-28 md:w-36 md:h-36" />
+          <Lottie
+            animationData={userAnim}
+            loop
+            className="w-28 h-28 md:w-36 md:h-36"
+          />
         </div>
+
+        
       </div>
     </Card>
   )

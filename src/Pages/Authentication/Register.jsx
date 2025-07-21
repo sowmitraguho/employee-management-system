@@ -99,7 +99,8 @@ const Register = () => {
 
         updateUser(updatedUserData).then(async () => {
           const fullForm = { ...form, imageUrl };
-          const result = await postData("users", fullForm);
+          console.log('users info', fullForm);
+          const result = await postData("/users", fullForm);
           if (result) console.log("User created:", result);
 
           await Swal.fire({
@@ -140,6 +141,7 @@ const Register = () => {
           showConfirmButton: false,
           timer: 1500,
         });
+        navigate("/");
       }
     } catch (err) {
       setError(err.message);
@@ -275,6 +277,7 @@ const Register = () => {
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={!imageUrl}
               className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-indigo-500 hover:to-blue-500"
             >
               Register

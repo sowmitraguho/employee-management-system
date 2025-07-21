@@ -16,10 +16,13 @@ import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import ThemeToggle from "../../../Components/ui/ThemeToggle";
 import { CompanyLogo } from "../../../Components/CompanyLogo/CompanyLogo";
 import { Menu, X } from "lucide-react";
+import Spinner from "../../../Components/Spinner/Spinner";
 
 const Navbar = () => {
-  const { loggedInUser, logOut } = useContext(AuthContext);
+  const { loggedInUser, logOut, loading } = useContext(AuthContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  if(loading) return <Spinner/>;
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-800">

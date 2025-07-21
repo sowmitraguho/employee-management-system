@@ -21,8 +21,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format, isValid } from "date-fns";
-import axios from "axios";
 import useProtectedAxios from "../../../Hooks/useProtectedAxios";
+import useAxiosGetData from "../../../Hooks/useAxiosGetData";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -33,6 +33,8 @@ export default function ProgressPage() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {getAllWorks} = useAxiosGetData();
+
 
   // ✅ Fetch employees
   useEffect(() => {
@@ -59,12 +61,11 @@ export default function ProgressPage() {
   useEffect(() => {
     const fetchWorkRecords = async () => {
       try {
-        const res = await axios.get(`${baseURL}/works`, {
-          withCredentials: true,
-        });
-        const records = Array.isArray(res.data)
-          ? res.data
-          : res.data?.data || [];
+        const res = await getAllWorks();
+       // console.log('getting all works in progress page', res);
+        const records = Array.isArray(res)
+          ? res
+          : res?.data || [];
         setWorkRecords(records);
       } catch (err) {
         console.error("Error fetching work records:", err);
@@ -147,7 +148,7 @@ export default function ProgressPage() {
             <SelectContent>
               <SelectItem value="all">All Employees</SelectItem>
               {employees?.map((emp) => {
-                const value = emp.email ?? emp._id ?? `unknown-${Math.random()}`;
+                const value = emp._id ?? emp.email ?? `unknown-${Math.random()}`;
                 return (
                   <SelectItem key={value} value={emp.email ?? ""}>
                     {emp.email || "Unknown Employee"}

@@ -9,22 +9,47 @@ const useAxios = (baseURL) => {
 
   
 
+  // 
+  
   const postData = async (url, data, config = {}) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await axios.post(`${baseURL}${url}`, data, config);
-      setResponse(res.data);
-      console.log('inside hook',res.data);
-      return res.data;
-    } catch (err) {
-      setError(err);
-      console.error('POST error:', err);
-      return null;
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  setError(null);
+
+  try {
+    const res = await axios.post(
+      `${baseURL}${url}`,
+      data,
+      {
+        headers: { 'Content-Type': 'application/json', ...config.headers },
+        withCredentials: true, // if you use cookies/auth
+        ...config
+      }
+    );
+
+    setResponse(res.data);
+    console.log('inside hook', res.data);
+    return res.data;
+
+  } catch (err) {
+    console.error('POST error:', err);
+
+    // If it's an Axios error, extract details
+    if (err.response) {
+      console.error('Server responded with:', err.response.data);
+    } else if (err.request) {
+      console.error('No response received:', err.request);
+    } else {
+      console.error('Axios setup error:', err.message);
     }
-  };
+
+    setError(err);
+    return null;
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const putData = async (url, data, config = {}) => {
     setLoading(true);
