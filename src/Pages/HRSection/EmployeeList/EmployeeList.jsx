@@ -4,11 +4,10 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Spinner from "../../../Components/Spinner/Spinner";
 import { useNavigate } from "react-router";
 import axios from "axios";
@@ -16,55 +15,44 @@ import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 
 const fetchEmployees = async () => {
-  const res = await useProtectedAxios.get(`${import.meta.env.VITE_API_URL}/users?role=employee`, { withCredentials: true });
-  console.log('employees',res.data);
+  const res = await useProtectedAxios.get(
+    `${import.meta.env.VITE_API_URL}/users?role=employee`,
+    { withCredentials: true }
+  );
   return res.data;
 };
 
 const toggleVerified = async (userId, newStatus) => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ isVerified: newStatus }),
-  });
-  const data = await res.json();
-  return data;
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/${userId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isVerified: newStatus }),
+    }
+  );
+  return res.json();
 };
 
-
 const createPayrollRequest = async (requestData) => {
-  console.log('createPayRollRequest', requestData);
   try {
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/payroll/request`,
       requestData,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      { headers: { "Content-Type": "application/json" } }
     );
-
-    // ✅ axios automatically parses JSON → return res.data
     return res.data;
-
   } catch (error) {
     console.error("❌ Error creating payroll request:", error);
-
-    // ✅ Show useful error message
     if (error.response) {
-      // Server responded with an error status
-      console.error("Server Error:", error.response.data);
       throw new Error(error.response.data.message || "Server error");
     } else if (error.request) {
-      // No response from server
       throw new Error("No response from server. Check your network.");
     } else {
-      // Something else
       throw new Error(error.message || "Unexpected error");
     }
   }
 };
-
-
 
 export default function EmployeeList() {
   const queryClient = useQueryClient();
@@ -73,6 +61,7 @@ export default function EmployeeList() {
   const [year, setYear] = useState("");
   const [open, setOpen] = useState(false);
   const { loggedInUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
@@ -80,7 +69,8 @@ export default function EmployeeList() {
   });
 
   const verifyMutation = useMutation({
-    mutationFn: ({ userId, newStatus }) => toggleVerified(userId, newStatus),
+    mutationFn: ({ userId, newStatus }) =>
+      toggleVerified(userId, newStatus),
     onSuccess: () => queryClient.invalidateQueries(["employees"]),
   });
 
@@ -94,8 +84,10 @@ export default function EmployeeList() {
   });
 
   const handleVerifyToggle = (emp) => {
-    const newStatus = !emp.isVerified;
-    verifyMutation.mutate({ userId: emp._id, newStatus });
+    verifyMutation.mutate({
+      userId: emp._id,
+      newStatus: !emp.isVerified,
+    });
   };
 
   const handlePayClick = (emp) => {
@@ -104,18 +96,15 @@ export default function EmployeeList() {
   };
 
   const handleSubmitPay = () => {
-    if (!month || !year || !selectedEmployee) {
-      console.log('month - year - selectedEmployee', month, year, selectedEmployee);
-      return;
-    }
-    console.log('month - year - selectedEmployee', month, year, selectedEmployee);
+    if (!month || !year || !selectedEmployee) return;
 
     const requestData = {
       employeeId: selectedEmployee._id,
       employeeName: selectedEmployee.name,
       employeeEmail: selectedEmployee.email,
       employeeSalary: selectedEmployee.Salary,
-      employeeBankAcc: selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
+      employeeBankAcc:
+        selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
       employeeRole: selectedEmployee.role,
       month,
       year,
@@ -125,65 +114,92 @@ export default function EmployeeList() {
     payrollMutation.mutate(requestData);
   };
 
-  const navigate = useNavigate();
-
   const handleViewDetails = (email) => {
     navigate(`/dashboard/employeedetails/${email}`);
   };
-  //console.log('employees from employee list: ', employees);
+
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Employee List</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          Employee Management
+        </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Manage employee verification & salary requests
+        </p>
+      </div>
 
-      {isLoading ? <div>
-        <p>Loading...</p>
-        <Spinner />
-      </div> : (
-        <div className="overflow-x-auto shadow rounded-lg border border-gray-700">
-          <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-800 text-gray-300 uppercase">
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center space-y-2">
+          <Spinner />
+          <p className="text-gray-600 dark:text-gray-400">Loading employees...</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
               <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Verified</th>
-                <th className="px-4 py-3">Bank Account</th>
-                <th className="px-4 py-3">Salary</th>
-                <th className="px-4 py-3">Pay</th>
-                <th className="px-4 py-3">Details</th>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Email</th>
+                <th className="px-4 py-3 text-center">Verified</th>
+                <th className="px-4 py-3 text-left">Bank Account</th>
+                <th className="px-4 py-3 text-center">Salary</th>
+                <th className="px-4 py-3 text-center">Pay</th>
+                <th className="px-4 py-3 text-center">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-700">
-              {employees?.map((emp, idx) => (
-                <tr key={emp._id + idx} className="hover:bg-gray-800/50">
-                  <td className="px-4 py-3 font-medium whitespace-nowrap">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {employees?.map((emp) => (
+                <tr
+                  key={emp._id}
+                  className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">
                     {emp.name}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">{emp.email}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                    {emp.email}
+                  </td>
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => handleVerifyToggle(emp)}
-                      className="text-xl"
+                      className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors ${
+                        emp.isVerified
+                          ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                          : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+                      }`}
                     >
-                      {emp.isVerified ? "✅" : "❌"}
+                      {emp.isVerified ? "Verified ✅" : "Not Verified ❌"}
                     </button>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
                     {emp.bank_account_no || emp.bankAccountNo || "-"}
                   </td>
-                  <td className="px-4 py-3">{emp.Salary}৳</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-center font-semibold text-blue-600 dark:text-blue-400">
+                    {emp.Salary}৳
+                  </td>
+                  <td className="px-4 py-3 text-center">
                     <Button
                       size="sm"
                       disabled={!emp.isVerified}
-                      className={`${!emp.isVerified ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                      className={`${
+                        !emp.isVerified
+                          ? "opacity-50 cursor-not-allowed"
+                          : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                      }`}
                       onClick={() => handlePayClick(emp)}
                     >
                       Pay
                     </Button>
                   </td>
-                  <td className="px-4 py-3">
-                    <Button onClick={() => handleViewDetails(emp.email)} size="sm" variant="outline">
+                  <td className="px-4 py-3 text-center">
+                    <Button
+                      onClick={() => handleViewDetails(emp.email)}
+                      size="sm"
+                      variant="outline"
+                      className="border-blue-400 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800"
+                    >
                       View
                     </Button>
                   </td>
@@ -196,44 +212,68 @@ export default function EmployeeList() {
 
       {/* Pay Salary Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white dark:bg-gray-900 rounded-xl shadow-lg">
           <DialogHeader>
-            <DialogTitle>Pay Salary</DialogTitle>
+            <DialogTitle className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              Pay Salary to{" "}
+              <span className="text-blue-600 dark:text-blue-400">
+                {selectedEmployee?.name}
+              </span>
+            </DialogTitle>
           </DialogHeader>
+
           <div className="space-y-4">
             <Input
               type="number"
               value={selectedEmployee?.Salary || ""}
               disabled
+              className="bg-gray-50 dark:bg-gray-800"
             />
+
+            {/* Month Dropdown */}
             <select
               value={month}
               onChange={(e) => setMonth(e.target.value)}
               required
-              className="border rounded p-2 w-full dark:bg-[#0a0a0a]"
+              className="border rounded-md p-2 w-full dark:bg-gray-800 dark:text-gray-200"
             >
               <option value="">Select Month</option>
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
+              {[
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ].map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
             </select>
 
+            {/* Year Input */}
             <Input
               placeholder="Year (e.g. 2025)"
               value={year}
               onChange={(e) => setYear(e.target.value)}
               required
+              className="bg-gray-50 dark:bg-gray-800"
             />
-            <Button onClick={handleSubmitPay}>Submit Payment Request</Button>
+
+            {/* Submit Button */}
+            <Button
+              onClick={handleSubmitPay}
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
+            >
+              Submit Payment Request
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
