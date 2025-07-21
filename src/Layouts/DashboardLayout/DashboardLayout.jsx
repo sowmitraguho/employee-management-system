@@ -1,16 +1,18 @@
-import { Outlet, Navigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
-import DashboardSidebar from "../../Pages/Shared/DashboardSidebar/DashboardSidebar";
 import useAxiosGetData from "../../Hooks/useAxiosGetData";
-import Spinner from "../../Components/Spinner/Spinner"
+import Spinner from "../../Components/Spinner/Spinner";
+import DashboardSidebar from '../../Pages/Shared/DashboardSidebar/DashboardSidebar'
 import UserProfile from "../../Pages/Dashboard/UserProfile";
+import { Outlet } from "react-router";
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
   const [role, setRole] = useState(null);
   const [loadingRole, setLoadingRole] = useState(true);
-  const {getUserByEmail} = useAxiosGetData();
+  const [sidebarOpen, setSidebarOpen] = useState(true); // ✅ sidebar toggle state
+
+  const { getUserByEmail } = useAxiosGetData();
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -18,7 +20,7 @@ const DashboardLayout = () => {
         try {
           const data = await getUserByEmail(loggedInUser.email);
           console.log(data);
-          setRole(data.role); // role should be "employee", "hr", or "admin"
+          setRole(data.role);
         } catch (error) {
           console.error("Error fetching role:", error);
           setRole(null);
@@ -31,23 +33,37 @@ const DashboardLayout = () => {
     fetchUserRole();
   }, [loggedInUser]);
 
-  // Not logged in? Redirect to login
   if (!loggedInUser) return <Navigate to="/login" replace />;
 
-  // Still fetching role
-  if (loadingRole) return <div className="p-10 text-center">
-  
-  Loading dashboard...
-  <Spinner/>
-  </div>;
+  if (loadingRole)
+    return (
+      <div className="p-10 text-center">
+        Loading dashboard...
+        <Spinner/>
+      </div>
+    );
 
-  // If no valid role found, deny access
-  //if (!role) return <Navigate to="/unauthorized" replace />;
   return (
     <div className="min-h-screen flex">
-      <DashboardSidebar role={role} />
-      <main className="flex-1 p-4 bg-muted/40 dark:bg-gray-950">
-      <UserProfile/>
+      {/* ✅ Sidebar */}
+      
+      <DashboardSidebar role={role} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+      {/* ✅ Main Content should expand when sidebar is collapsed */}
+      <main
+        className={`flex-1 p-4 bg-muted/40 dark:bg-gray-950 transition-all duration-300`}
+      >
+        {/* Optional: Place a top navbar with hamburger button */}
+        <div className="md:hidden mb-4">
+          <button
+            className="p-2 border rounded-md"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? "Close Menu" : "Open Menu"}
+          </button>
+        </div>
+
+        <UserProfile />
         <Outlet context={{ role }} />
       </main>
     </div>

@@ -13,11 +13,12 @@ import Spinner from "../../../Components/Spinner/Spinner";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
+import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 
 const fetchEmployees = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/users?role=employee`);
-  console.log('employees',res);
-  return res.json();
+  const res = await useProtectedAxios.get(`${import.meta.env.VITE_API_URL}/users?role=employee`, { withCredentials: true });
+  console.log('employees',res.data);
+  return res.data;
 };
 
 const toggleVerified = async (userId, newStatus) => {

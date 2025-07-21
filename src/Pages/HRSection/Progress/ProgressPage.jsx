@@ -1,9 +1,28 @@
-import { useEffect, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { useEffect, useState, useMemo } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 import { format, isValid } from "date-fns";
 import axios from "axios";
+import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -19,8 +38,12 @@ export default function ProgressPage() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await axios.get(`${baseURL}/users`, { withCredentials: true });
-        const records = Array.isArray(res.data) ? res.data : res.data?.data || [];
+        const res = await useProtectedAxios.get(`${baseURL}/users`, {
+          withCredentials: true,
+        });
+        const records = Array.isArray(res.data)
+          ? res.data
+          : res.data?.data || [];
         setEmployees(records);
       } catch (err) {
         console.error("Error fetching employees:", err);
@@ -29,7 +52,6 @@ export default function ProgressPage() {
         setLoading(false);
       }
     };
-
     fetchEmployees();
   }, []);
 
@@ -37,8 +59,12 @@ export default function ProgressPage() {
   useEffect(() => {
     const fetchWorkRecords = async () => {
       try {
-        const res = await axios.get(`${baseURL}/works`, { withCredentials: true });
-        const records = Array.isArray(res.data) ? res.data : res.data?.data || [];
+        const res = await axios.get(`${baseURL}/works`, {
+          withCredentials: true,
+        });
+        const records = Array.isArray(res.data)
+          ? res.data
+          : res.data?.data || [];
         setWorkRecords(records);
       } catch (err) {
         console.error("Error fetching work records:", err);
@@ -47,49 +73,73 @@ export default function ProgressPage() {
         setLoading(false);
       }
     };
-
     fetchWorkRecords();
   }, []);
 
-  if (loading) return <p className="text-center text-gray-600 dark:text-gray-300">Loading work records...</p>;
-  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+  // ✅ Filtered work records safely (always computed)
+  const filteredRecords = useMemo(() => {
+    return workRecords.filter((record) => {
+      if (!record?.completionDate) return false;
+      const recordDate = new Date(record.completionDate);
+      if (!isValid(recordDate)) return false;
 
-  // ✅ Filtered work records safely
-  const filteredRecords = workRecords.filter((record) => {
-    if (!record?.completionDate) return false;
-    const recordDate = new Date(record.completionDate);
-    if (!isValid(recordDate)) return false;
+      const recordMonth = format(recordDate, "MMMM");
+      const matchesEmployee =
+        selectedEmployee !== "all" ? record.email === selectedEmployee : true;
+      const matchesMonth =
+        selectedMonth !== "all" ? recordMonth === selectedMonth : true;
 
-    const recordMonth = format(recordDate, "MMMM");
+      return matchesEmployee && matchesMonth;
+    });
+  }, [workRecords, selectedEmployee, selectedMonth]);
 
-    const matchesEmployee = selectedEmployee !== "all" ? record.email === selectedEmployee : true;
-    const matchesMonth = selectedMonth !== "all" ? recordMonth === selectedMonth : true;
-
-    return matchesEmployee && matchesMonth;
-  });
+  // ✅ Calculate total hours dynamically (always computed)
+  const totalHours = useMemo(() => {
+    return filteredRecords.reduce(
+      (sum, rec) => sum + (parseFloat(rec.finishHour) || 0),
+      0
+    );
+  }, [filteredRecords]);
 
   // ✅ Unique available months safely
-  const availableMonths = [
-    ...new Set(
-      workRecords
-        .filter((r) => r?.completionDate && isValid(new Date(r.completionDate)))
-        .map((r) => format(new Date(r.completionDate), "MMMM"))
-    ),
-  ];
+  const availableMonths = useMemo(() => {
+    return [
+      ...new Set(
+        workRecords
+          .filter(
+            (r) => r?.completionDate && isValid(new Date(r.completionDate))
+          )
+          .map((r) => format(new Date(r.completionDate), "MMMM"))
+      ),
+    ];
+  }, [workRecords]);
+
+  // ✅ Now safe to return conditionally
+  if (loading)
+    return (
+      <p className="text-center text-gray-600 dark:text-gray-300">
+        Loading work records...
+      </p>
+    );
+  if (error)
+    return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <Card className="p-4 space-y-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+    <Card className="p-6 space-y-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-md rounded-xl transition-colors duration-300 my-6">
       {/* ✅ Header */}
-      <CardHeader>
-        <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100">
           Employee Work Progress
         </CardTitle>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Track employee tasks and work hours
+        </p>
       </CardHeader>
 
-      {/* ✅ Filters: Responsive flex */}
+      {/* ✅ Filters */}
       <CardContent className="flex flex-col sm:flex-row gap-4">
         {/* Employee Dropdown */}
-        <div className="w-full sm:w-[200px]">
+        <div className="flex-1 min-w-[180px]">
           <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>
             <SelectTrigger className="w-full dark:bg-gray-800 dark:text-gray-200">
               <SelectValue placeholder="Select Employee" />
@@ -109,7 +159,7 @@ export default function ProgressPage() {
         </div>
 
         {/* Month Dropdown */}
-        <div className="w-full sm:w-[200px]">
+        <div className="flex-1 min-w-[180px]">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
             <SelectTrigger className="w-full dark:bg-gray-800 dark:text-gray-200">
               <SelectValue placeholder="Select Month" />
@@ -126,15 +176,38 @@ export default function ProgressPage() {
         </div>
       </CardContent>
 
-      {/* ✅ Responsive Table Wrapper */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+      {/* ✅ Work Hours Summary */}
+      <div className="flex justify-center">
+        <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4 w-full sm:w-1/2 text-center shadow-sm">
+          <p className="text-lg font-medium text-blue-800 dark:text-blue-300">
+            Total Work Hours
+          </p>
+          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+            {totalHours.toFixed(2)} hrs
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            (Based on current filter)
+          </p>
+        </div>
+      </div>
+
+      {/* ✅ Responsive Table */}
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
         <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-gray-100 dark:bg-gray-800">
-              <TableHead className="text-gray-700 dark:text-gray-200">Employee</TableHead>
-              <TableHead className="text-gray-700 dark:text-gray-200">Task</TableHead>
-              <TableHead className="text-gray-700 dark:text-gray-200">Date</TableHead>
-              <TableHead className="text-gray-700 dark:text-gray-200">Hours</TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-200">
+                Employee
+              </TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-200">
+                Task
+              </TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-200">
+                Date
+              </TableHead>
+              <TableHead className="text-gray-700 dark:text-gray-200">
+                Hours
+              </TableHead>
             </TableRow>
           </TableHeader>
 
@@ -142,7 +215,8 @@ export default function ProgressPage() {
             {filteredRecords?.length > 0 ? (
               filteredRecords.map((record) => {
                 const validDate =
-                  record?.completionDate && isValid(new Date(record.completionDate))
+                  record?.completionDate &&
+                  isValid(new Date(record.completionDate))
                     ? format(new Date(record.completionDate), "dd MMM yyyy")
                     : "Invalid date";
 
@@ -151,10 +225,18 @@ export default function ProgressPage() {
                     key={record._id || record.email || Math.random()}
                     className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <TableCell className="text-gray-800 dark:text-gray-300">{record.email ?? "Unknown"}</TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">{record.workName ?? "No task name"}</TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">{validDate}</TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">{record.finishHour ?? "-"}</TableCell>
+                    <TableCell className="text-gray-800 dark:text-gray-300">
+                      {record.email ?? "Unknown"}
+                    </TableCell>
+                    <TableCell className="text-gray-800 dark:text-gray-300">
+                      {record.workName ?? "No task name"}
+                    </TableCell>
+                    <TableCell className="text-gray-800 dark:text-gray-300">
+                      {validDate}
+                    </TableCell>
+                    <TableCell className="text-gray-800 dark:text-gray-300">
+                      {record.finishHour ?? "-"}
+                    </TableCell>
                   </TableRow>
                 );
               })
