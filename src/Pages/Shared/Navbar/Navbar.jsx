@@ -144,12 +144,12 @@ const Navbar = () => {
           >
             Contact Us
           </Link>
-          <Link
+          {loggedInUser && <Link
             to="/dashboard"
             className="text-md font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition hover:from-red-500 hover:via-pink-500 hover:to-blue-500"
           >
             Dashboard
-          </Link>
+          </Link>}
 
             {!loggedInUser && (
               <div className="flex flex-col gap-2 mt-2">

@@ -3,8 +3,6 @@ import { AuthContext } from "@/Contexts/AuthContext/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import employeeLottie from "../../assets/Lottifiles/user.json";
-import hrLottie from "../../assets/Lottifiles/user.json";
 import adminLottie from "../../assets/Lottifiles/admin.json";
 //import hrLottie from "../../assets/Lottifiles/admin.json"; // Replace with your Lottie JSON
 import {
@@ -13,6 +11,7 @@ import {
 } from "recharts";
 import { useOutletContext } from "react-router";
 import useProtectedAxios from "../../Hooks/useProtectedAxios";
+import EmployeeProfile from "../EmployeeSection/EmployeeProfile/EmployeeProfile";
 
 // Dummy chart data (you can fetch from API)
 
@@ -50,24 +49,6 @@ const formatNumberShort = (num) => {
     return num.toString(); // less than 1000, just return original
 };
 
-const normalize = (emp) => ({
-    id: emp._id,
-    name: emp.name,
-    email: emp.email,
-    role: emp.role,
-    designation: emp.designation || emp.Designation || "Not Assigned",
-    salary: emp.salary || emp.Salary || "0",
-    bankAccount: emp.bankAccountNo || emp.bank_account_no || "N/A",
-    isVerified: emp.isVerified,
-    photo: emp.photoURL || emp.imageUrl || "https://via.placeholder.com/40",
-});
-
-
-
-const employeeProgress = [
-    { name: "Completed", value: 70 },
-    { name: "Pending", value: 30 }
-];
 
 
 
@@ -79,7 +60,7 @@ const Dashboard = () => {
     //const role = user?.role || "employee"; // employee | hr | admin
     const [allEmployees, setAllEmployees] = useState([]);
     const [employees, setEmployees] = useState([]);
-    const [loading, setLoading] = useState(true);
+    
     const [stats, setStats] = useState(null);
     
     const { role } = useOutletContext();
@@ -97,9 +78,7 @@ const Dashboard = () => {
             await setStats(aggregated);
         } catch (err) {
             console.error("Error fetching employees:", err);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
     console.log(employees);
     useEffect(() => {
@@ -109,47 +88,8 @@ const Dashboard = () => {
 
 
     const renderEmployeeDashboard = () => (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-xl">
-                    <CardHeader>
-                        <CardTitle>Your Progress</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={200}>
-                            <PieChart>
-                                <Pie data={employeeProgress} dataKey="value" outerRadius={80}>
-                                    {employeeProgress.map((_, index) => (
-                                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-gradient-to-r from-green-400 to-blue-500 text-white">
-                    <CardHeader>
-                        <CardTitle>Upcoming Salary</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">$3,200</p>
-                        <p className="text-sm">Next payment: 25 July 2025</p>
-                    </CardContent>
-                </Card>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-white">
-                    <CardContent className="flex justify-center">
-                        <Lottie animationData={employeeLottie} loop />
-                    </CardContent>
-                </Card>
-            </motion.div>
-        </div>
+            <EmployeeProfile/>
+        
     );
 
     const renderHRDashboard = () => {
@@ -256,47 +196,7 @@ const Dashboard = () => {
             count,
         }));
         return (
-            // <div className="flex flex-col gap-4">
-            //     <motion.div whileHover={{ scale: 1.05 }}>
-            //         <Card className="bg-white">
-            //             <CardContent className="flex justify-center">
-            //                 <Lottie animationData={adminLottie} loop />
-            //             </CardContent>
-            //         </Card>
-            //     </motion.div>
-            //     <motion.div whileHover={{ scale: 1.05 }}>
-            //         <Card className="dark:bg-gray-900 dark:text-white">
-            //             <CardHeader>
-            //                 <CardTitle>Monthly Payroll Expenses</CardTitle>
-            //             </CardHeader>
-            //             <CardContent>
-            //                 <ResponsiveContainer width="100%" height={200}>
-            //                     <BarChart data={adminPayrollStats}>
-            //                         <CartesianGrid strokeDasharray="3 3" />
-            //                         <XAxis dataKey="month" />
-            //                         <YAxis />
-            //                         <Tooltip />
-            //                         <Bar dataKey="expense" fill="#facc15" />
-            //                     </BarChart>
-            //                 </ResponsiveContainer>
-            //             </CardContent>
-            //         </Card>
-            //     </motion.div>
-
-            //     <motion.div whileHover={{ scale: 1.05 }}>
-            //         <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-            //             <CardHeader>
-            //                 <CardTitle>Total Employees</CardTitle>
-            //             </CardHeader>
-            //             <CardContent>
-            //                 <p className="text-3xl font-bold">{stats.totalEmployees}</p>
-            //                 <p className="text-sm">Active: {stats.activeCount}, Fired: {stats.firedCount}</p>
-            //             </CardContent>
-            //         </Card>
-            //     </motion.div>
-
-
-            // </div>
+    
             <div className="grid gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
                 <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
                     Admin Dashboard Overview
@@ -401,16 +301,6 @@ const Dashboard = () => {
 
     return (
         <div className="p-6 space-y-6">
-            {/* <motion.h1
-                className="text-3xl font-bold text-center"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-            >
-                {role === "employee" && "Employee Dashboard"}
-                {role === "hr" && "HR Dashboard"}
-                {role === "admin" && "Admin Dashboard"}
-            </motion.h1> */}
-
             {role === "employee" && renderEmployeeDashboard()}
             {role === "hr" && renderHRDashboard()}
             {role === "admin" && renderAdminDashboard()}

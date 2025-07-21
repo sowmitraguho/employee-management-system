@@ -9,6 +9,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
+import axios from "axios";
+
 export default function AboutUs() {
   const [team, setTeam] = useState([]);
 
@@ -16,9 +18,10 @@ export default function AboutUs() {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users`); // Replace with your API
-        const data = await res.json();
-        setTeam(data);
+       // const res = await fetch(`${import.meta.env.VITE_API_URL}/users`); // Replace with your API
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/teams`);
+        console.log(res.data);
+        setTeam(res.data);
       } catch (error) {
         console.error("Error fetching team:", error);
       }
@@ -40,7 +43,7 @@ export default function AboutUs() {
             About <span className="text-blue-600 dark:text-blue-400">Us</span>
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            We’re a team of passionate professionals dedicated to building
+            We're a team of passionate professionals dedicated to building
             world-class employee management solutions.
           </p>
         </motion.div>
