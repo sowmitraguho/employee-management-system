@@ -58,9 +58,11 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
       >
         {/* ✅ Sidebar Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-800">
+          <Link to='/dashboard'>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-100">
             Dashboard
           </span>
+          </Link>
           <div className="flex items-center justify-center gap-2">
             <ThemeToggle />
             {/* ❌ Hide close button on md+ screens */}

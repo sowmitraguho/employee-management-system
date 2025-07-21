@@ -6,6 +6,7 @@ import Lottie from "lottie-react";
 import employeeLottie from "../../assets/Lottifiles/user.json";
 import hrLottie from "../../assets/Lottifiles/user.json";
 import adminLottie from "../../assets/Lottifiles/admin.json";
+//import hrLottie from "../../assets/Lottifiles/admin.json"; // Replace with your Lottie JSON
 import {
     PieChart, Pie, Cell, Tooltip,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
@@ -43,11 +44,23 @@ const prepareAdminStats = (employees) => {
 };
 
 const formatNumberShort = (num) => {
-  if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B";
-  if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
-  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-  return num.toString(); // less than 1000, just return original
+    if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B";
+    if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+    return num.toString(); // less than 1000, just return original
 };
+
+const normalize = (emp) => ({
+    id: emp._id,
+    name: emp.name,
+    email: emp.email,
+    role: emp.role,
+    designation: emp.designation || emp.Designation || "Not Assigned",
+    salary: emp.salary || emp.Salary || "0",
+    bankAccount: emp.bankAccountNo || emp.bank_account_no || "N/A",
+    isVerified: emp.isVerified,
+    photo: emp.photoURL || emp.imageUrl || "https://via.placeholder.com/40",
+});
 
 
 
@@ -56,10 +69,6 @@ const employeeProgress = [
     { name: "Pending", value: 30 }
 ];
 
-const hrEmployeeStats = [
-    { name: "Verified", value: 45 },
-    { name: "Unverified", value: 15 }
-];
 
 
 const COLORS = ["#4ade80", "#facc15", "#f87171", "#60a5fa"];
@@ -68,15 +77,21 @@ const baseURL = import.meta.env.VITE_API_URL;
 const Dashboard = () => {
     //const { loggedInUser } = useContext(AuthContext); 
     //const role = user?.role || "employee"; // employee | hr | admin
+    const [allEmployees, setAllEmployees] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState(null);
+    
     const { role } = useOutletContext();
     const fetchEmployees = async () => {
         try {
             const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
+            const res2 = await useProtectedAxios.get(`${baseURL}/users?role=employee`, { withCredentials: true });
             console.log('fetched employee for admin', res.data);
+            console.log('fetched employee for hr', res2.data);
             setEmployees(res.data || []);
+            setAllEmployees(res2.data || []);
+            
             const aggregated = await prepareAdminStats(res.data);
             console.log('aggregated', aggregated);
             await setStats(aggregated);
@@ -137,49 +152,91 @@ const Dashboard = () => {
         </div>
     );
 
-    const renderHRDashboard = () => (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
-                    <CardHeader>
-                        <CardTitle>Employee Verification Status</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={200}>
-                            <PieChart>
-                                <Pie data={hrEmployeeStats} dataKey="value" outerRadius={80}>
-                                    {hrEmployeeStats.map((_, index) => (
-                                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </motion.div>
+    const renderHRDashboard = () => {
+        const verifiedCount = allEmployees.filter((e) => e.isVerified).length;
+        const unverifiedCount = allEmployees.length - verifiedCount;
+        // ✅ Pie chart data
+        const hrEmployeeStats = [
+            { name: "Verified", value: verifiedCount },
+            { name: "Not Verified", value: unverifiedCount },
+        ];
 
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-gradient-to-r from-pink-500 to-red-500 text-white">
-                    <CardHeader>
-                        <CardTitle>Pending Payroll Requests</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold">12</p>
-                        <p className="text-sm">Need approval from Admin</p>
-                    </CardContent>
-                </Card>
-            </motion.div>
+        const COLORS = ["#34d399", "#f87171"]; // green for verified, red for not verified
 
-            <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className="bg-white">
-                    <CardContent className="flex justify-center">
-                        <Lottie animationData={hrLottie} loop />
-                    </CardContent>
-                </Card>
-            </motion.div>
-        </div>
-    );
+        // ✅ Pending payroll requests (example: all verified employees)
+        const pendingPayroll = verifiedCount; // you can adjust based on logic
+
+        return (
+            <div className="p-6 max-w-7xl mx-auto">
+                <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
+                    HR Dashboard Overview
+                </h1>
+
+                <div className="flex flex-col-reverse gap-4">
+                    {/* ✅ Employee Verification Status Pie Chart */}
+                    <motion.div whileHover={{ scale: 1.05 }}>
+                        <Card className="bg-gradient-to-r from-sky-400 to-blue-800 text-gray-50 shadow-lg">
+                            <CardHeader>
+                                <CardTitle>Employee Verification Status</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ResponsiveContainer width="100%" height={200}>
+                                    <PieChart>
+                                        <Pie
+                                            data={hrEmployeeStats}
+                                            dataKey="value"
+                                            outerRadius={80}
+                                            label={({ name, value }) => `${name}: ${value}`}
+                                        >
+                                            {hrEmployeeStats.map((_, index) => (
+                                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{
+                                                background: "#fff",
+                                                border: "1px solid #ddd",
+                                                color: "#333",
+                                            }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+
+                                <div className="flex justify-between text-sm mt-4">
+                                    <span>✅ Verified: {verifiedCount}</span>
+                                    <span>❌ Not Verified: {unverifiedCount}</span>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    {/* ✅ Pending Payroll Requests */}
+                    <motion.div whileHover={{ scale: 1.05 }}>
+                        <Card className="bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg">
+                            <CardHeader>
+                                <CardTitle>Pending Payroll Requests</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-4xl font-extrabold">{pendingPayroll}</p>
+                                <p className="text-sm opacity-90 mt-2">
+                                    Need approval from Admin
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    {/* ✅ Lottie Animation Fun Card */}
+                    <motion.div whileHover={{ scale: 1.05 }}>
+                        <Card className="bg-white dark:bg-gray-900 shadow-lg">
+                            <CardContent className="flex justify-center items-center p-4">
+                                <Lottie animationData={adminLottie} loop style={{ height: 180 }} />
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </div>
+            </div>
+        );
+    }
 
     const renderAdminDashboard = () => {
         if (!stats) return <p className="text-center">Loading Dashboard...</p>;
@@ -241,7 +298,9 @@ const Dashboard = () => {
 
             // </div>
             <div className="grid gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
-
+                <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
+                    Admin Dashboard Overview
+                </h1>
                 {/* Total Employees Card */}
                 <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-xl">
                     <CardHeader>
@@ -342,7 +401,7 @@ const Dashboard = () => {
 
     return (
         <div className="p-6 space-y-6">
-            <motion.h1
+            {/* <motion.h1
                 className="text-3xl font-bold text-center"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -350,7 +409,7 @@ const Dashboard = () => {
                 {role === "employee" && "Employee Dashboard"}
                 {role === "hr" && "HR Dashboard"}
                 {role === "admin" && "Admin Dashboard"}
-            </motion.h1>
+            </motion.h1> */}
 
             {role === "employee" && renderEmployeeDashboard()}
             {role === "hr" && renderHRDashboard()}

@@ -22,7 +22,7 @@ export default function PayrollPage() {
   const baseURL = import.meta.env.VITE_API_URL;
   const { loggedInUser } = useContext(AuthContext);
 
-  const protectedAxios = useProtectedAxios();
+ 
 
   // ✅ Fetch payroll data
   const {
@@ -32,7 +32,7 @@ export default function PayrollPage() {
   } = useQuery({
     queryKey: ["payroll"],
     queryFn: async () => {
-      const res = await protectedAxios.get(`${baseURL}/payroll`);
+      const res = await useProtectedAxios.get(`${baseURL}/payroll`);
       return res.data;
     },
   });

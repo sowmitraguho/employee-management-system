@@ -1,11 +1,25 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import useProtectedAxios from "../../../Hooks/useProtectedAxios";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
+import Spinner from "../../../Components/Spinner/Spinner";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -19,11 +33,14 @@ export default function AdminEmployeesPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newSalary, setNewSalary] = useState("");
   const { loggedInUser } = useContext(AuthContext);
+
   // ✅ Fetch all verified users
   const fetchEmployees = async () => {
     try {
-      const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
-      console.log('fetched employee for admin', res.data);
+      const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`, {
+        withCredentials: true,
+      });
+      console.log("fetched employee for admin", res.data);
       setEmployees(res.data || []);
     } catch (err) {
       console.error("Error fetching employees:", err);
@@ -38,14 +55,18 @@ export default function AdminEmployeesPage() {
 
   // ✅ Fire an employee
   const fireEmployee = async (userId) => {
-    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
+    const token = await loggedInUser.getIdToken(true);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/fire`, {}, {
+      await axios.patch(
+        `${baseURL}/vfusers/${userId}/fire`,
+        {},
+        {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Attach token here
+            Authorization: `Bearer ${token}`,
           },
-        });
+        }
+      );
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, status: "fired" } : emp
@@ -58,14 +79,18 @@ export default function AdminEmployeesPage() {
 
   // ✅ Make Employee HR
   const makeHR = async (userId) => {
-    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
+    const token = await loggedInUser.getIdToken(true);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/makeHR`, {}, {
+      await axios.patch(
+        `${baseURL}/vfusers/${userId}/makeHR`,
+        {},
+        {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Attach token here
+            Authorization: `Bearer ${token}`,
           },
-        });
+        }
+      );
       setEmployees((prev) =>
         prev.map((emp) =>
           emp._id === userId ? { ...emp, role: "HR" } : emp
@@ -79,18 +104,17 @@ export default function AdminEmployeesPage() {
   // ✅ Update Salary
   const updateSalary = async (userId) => {
     if (!newSalary || isNaN(newSalary)) return alert("Enter a valid salary");
-    console.log('newsalary before update', newSalary);
+    console.log("newsalary before update", newSalary);
 
-    // ✅ Get fresh Firebase token
-    const token = await loggedInUser.getIdToken(/* forceRefresh */ true);
+    const token = await loggedInUser.getIdToken(true);
     try {
       await axios.patch(
         `${baseURL}/vfusers/${userId}/salary`,
-        { Salary: Number(newSalary) }, // ✅ Send numeric salary
+        { Salary: Number(newSalary) },
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Attach token here
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -107,42 +131,87 @@ export default function AdminEmployeesPage() {
     }
   };
 
-  //console.log('employees', employees);
-  if (loading) return <p className="text-center mt-6">Loading employees...</p>;
+  if (loading)
+    return (
+      <div className="flex flex-col items-center mt-10">
+        <p className="text-lg text-gray-700 dark:text-gray-300">
+          Loading employees...
+        </p>
+        <Spinner />
+      </div>
+    );
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">All Verified Employees</h1>
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-500 to-teal-500 text-transparent bg-clip-text">
+        ✅ Verified Employees
+      </h1>
 
-      {/* ✅ Responsive table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-        <Table className="min-w-full">
+      {/* ✅ Responsive table container */}
+      <div className="overflow-x-auto shadow-md rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <Table className="min-w-full text-left">
           <TableHeader>
-            <TableRow className="bg-gray-100 dark:bg-gray-800">
-              <TableHead className="text-gray-800 dark:text-gray-200">Name</TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">Designation</TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">Salary</TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">Make HR</TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">Adjust Salary</TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">Fire</TableHead>
+            <TableRow className="bg-gradient-to-r from-blue-100 to-teal-100 dark:from-gray-800 dark:to-gray-700">
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4">
+                Name
+              </TableHead>
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4">
+                Role
+              </TableHead>
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4">
+                Salary
+              </TableHead>
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4 text-center">
+                Make HR
+              </TableHead>
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4 text-center">
+                Adjust Salary
+              </TableHead>
+              <TableHead className="text-gray-900 dark:text-gray-200 p-4 text-center">
+                Fire
+              </TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {employees.map((emp) => (
-              <TableRow key={emp._id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                <TableCell className="dark:text-gray-300">{emp.name || "No Name"}</TableCell>
-                <TableCell className="capitalize dark:text-gray-300">
-                  {emp.role === "HR" ? "HR" : "Employee"}
+              <TableRow
+                key={emp._id}
+                className="hover:bg-blue-50 dark:hover:bg-gray-800 transition"
+              >
+                <TableCell className="p-4 font-medium text-gray-800 dark:text-gray-300">
+                  {emp.name || "No Name"}
                 </TableCell>
-                <TableCell className="dark:text-gray-300">{emp.Salary || "Not set"}</TableCell>
+
+                <TableCell className="capitalize p-4 dark:text-gray-300">
+                  {emp.role === "HR" ? (
+                    <span className="px-2 py-1 rounded-md text-white bg-green-500 text-sm font-semibold">
+                      HR
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 rounded-md text-white bg-blue-500 text-sm font-semibold">
+                      Employee
+                    </span>
+                  )}
+                </TableCell>
+
+                <TableCell className="p-4 dark:text-gray-300">
+                  {emp.Salary ? (
+                    <span className="font-semibold text-teal-600 dark:text-teal-400">
+                      ${emp.Salary.toLocaleString()}
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">Not set</span>
+                  )}
+                </TableCell>
 
                 {/* ✅ Make HR Button */}
-                <TableCell>
+                <TableCell className="text-center">
                   {emp.role === "employee" && emp.status !== "fired" ? (
                     <Button
                       size="sm"
                       variant="outline"
+                      className="border-blue-500 text-blue-500 hover:bg-blue-50"
                       onClick={() => makeHR(emp._id)}
                     >
                       Make HR
@@ -155,11 +224,12 @@ export default function AdminEmployeesPage() {
                 </TableCell>
 
                 {/* ✅ Adjust Salary Button */}
-                <TableCell>
+                <TableCell className="text-center">
                   {emp.status !== "fired" ? (
                     <Button
                       size="sm"
                       variant="secondary"
+                      className="bg-teal-500 hover:bg-teal-600 text-white"
                       onClick={() => {
                         setSelectedUser(emp);
                         setSalaryModalOpen(true);
@@ -173,13 +243,14 @@ export default function AdminEmployeesPage() {
                 </TableCell>
 
                 {/* ✅ Fire Button */}
-                <TableCell>
+                <TableCell className="text-center">
                   {emp.status === "fired" ? (
                     <span className="text-red-500 font-semibold">Fired</span>
                   ) : (
                     <Button
                       size="sm"
                       variant="destructive"
+                      className="bg-red-500 hover:bg-red-600 text-white"
                       onClick={() => {
                         setSelectedUser(emp);
                         setFireModalOpen(true);
@@ -197,18 +268,28 @@ export default function AdminEmployeesPage() {
 
       {/* ✅ Fire Confirmation Modal */}
       <Dialog open={fireModalOpen} onOpenChange={setFireModalOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-lg">
           <DialogHeader>
-            <DialogTitle>Confirm Firing</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-red-600">
+              Confirm Firing
+            </DialogTitle>
           </DialogHeader>
-          <p>
-            Are you sure you want to <span className="font-bold text-red-500">fire {selectedUser?.name}</span>?
+          <p className="text-gray-700 dark:text-gray-300">
+            Are you sure you want to{" "}
+            <span className="font-bold text-red-500">{selectedUser?.name}</span>?
             They won’t be able to log in anymore.
           </p>
           <DialogFooter className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setFireModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="outline"
+              className="border-gray-300 hover:bg-gray-100"
+              onClick={() => setFireModalOpen(false)}
+            >
+              Cancel
+            </Button>
             <Button
               variant="destructive"
+              className="bg-red-600 hover:bg-red-700"
               onClick={() => {
                 fireEmployee(selectedUser._id);
                 setFireModalOpen(false);
@@ -222,26 +303,35 @@ export default function AdminEmployeesPage() {
 
       {/* ✅ Salary Adjust Modal */}
       <Dialog open={salaryModalOpen} onOpenChange={setSalaryModalOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-lg">
           <DialogHeader>
-            <DialogTitle>Adjust Salary for {selectedUser?.email}</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-teal-600">
+              Adjust Salary for {selectedUser?.email}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <label className="text-sm font-medium">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Enter new salary:
               <Input
                 type="text"
                 placeholder="Enter salary"
                 value={newSalary}
                 onChange={(e) => setNewSalary(e.target.value)}
-                className="mt-1"
+                className="mt-2"
               />
             </label>
           </div>
           <DialogFooter className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setSalaryModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="outline"
+              className="border-gray-300 hover:bg-gray-100"
+              onClick={() => setSalaryModalOpen(false)}
+            >
+              Cancel
+            </Button>
             <Button
               variant="default"
+              className="bg-teal-600 hover:bg-teal-700 text-white"
               onClick={() => updateSalary(selectedUser._id)}
             >
               Save
