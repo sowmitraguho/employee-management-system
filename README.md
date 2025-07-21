@@ -195,11 +195,3 @@ To access Admin Panel, use the following credentials:
 
 This project is for educational purposes. You may use and modify it freely.
 
----
-
-Would you like me to also:
-✅ Add badges (build status, license, tech stack) for a more professional look?
-✅ Generate sample screenshots & add placeholders?
-✅ Or write a short CONTRIBUTING.md for contributors?
-
-Should I include those extra enhancements?
