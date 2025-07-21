@@ -54,10 +54,10 @@ export default function UserProfile() {
   }
 
   return (
-    <Card className="relative flex flex-row items-center justify-between gap-6 p-6 shadow-lg dark:bg-gray-900">
+    <Card className="relative flex flex-col md:flex-row items-center justify-between gap-6 p-6 shadow-lg dark:bg-gray-900">
       
       {/* Left Section: Profile Image + Info */}
-      <div className="flex flex-row items-center gap-6 flex-1">
+      <div className="flex flex-col md:flex-row items-center gap-6 flex-1">
         <img
           src={
             userData.imageUrl ||
@@ -67,7 +67,7 @@ export default function UserProfile() {
           className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-2 border-gray-300 dark:border-gray-700"
         />
 
-        <div className="text-center md:text-left space-y-2">
+        <div className="text-left space-y-2">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
             {userData.name}
           </h2>
