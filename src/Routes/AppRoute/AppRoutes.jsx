@@ -35,7 +35,7 @@ const routes = createBrowserRouter([
             <DashboardLayout />
         </PrivateRoute>,
         children: [
-            { index: true, Component: EmployeeProfile },
+            { index: true, Component: Dashboard },
             { path: 'worksheet/:email', Component: EmployeeWorksheet },
             { path: 'paymenthistory/:email', Component: PaymentHistory },
             { path: 'employeelist', Component: EmployeeList },
