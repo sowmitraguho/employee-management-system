@@ -52,7 +52,7 @@ export default function UserProfile() {
       </Card>
     )
   }
-
+  
   return (
     <Card className="relative flex flex-col md:flex-row items-center justify-between gap-6 p-6 shadow-lg dark:bg-gray-900">
       

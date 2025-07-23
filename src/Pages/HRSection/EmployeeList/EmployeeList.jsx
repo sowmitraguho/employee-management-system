@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import useProtectedAxios from "../../../Hooks/useProtectedAxios";
+import Swal from "sweetalert2";
 
 const fetchEmployees = async () => {
   const res = await useProtectedAxios.get(
@@ -62,10 +63,24 @@ export default function EmployeeList() {
   const [open, setOpen] = useState(false);
   const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_URL;
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
     queryFn: fetchEmployees,
+  });
+
+
+  const {
+    data: payrollData = [],
+    isPayLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["payroll"],
+    queryFn: async () => {
+      const res = await useProtectedAxios.get(`${baseURL}/payroll`);
+      return res.data;
+    },
   });
 
   const verifyMutation = useMutation({
@@ -77,9 +92,17 @@ export default function EmployeeList() {
   const payrollMutation = useMutation({
     mutationFn: createPayrollRequest,
     onSuccess: () => {
-      setOpen(false);
       setMonth("");
       setYear("");
+      refetch();
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Added for approval of Admin!",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      setOpen(false);
     },
   });
 
@@ -95,23 +118,38 @@ export default function EmployeeList() {
     setOpen(true);
   };
 
-  const handleSubmitPay = () => {
+  const handleSubmitPay = async () => {
     if (!month || !year || !selectedEmployee) return;
+    const hasMonth = payrollData.some(
+      item => item.employeeEmail === selectedEmployee.email && item.month === month && item.year === year
+    );
+    if (hasMonth) {
+      
+      Swal.fire({
+        title: "Oops... ",
+        text: "This Month's Salary is already paid!",
+        icon: "error",
+        draggable: true
+      });
+      setOpen(false);
+    } else {
+      const requestData = {
+        employeeId: selectedEmployee._id,
+        employeeName: selectedEmployee.name,
+        employeeEmail: selectedEmployee.email,
+        employeeSalary: selectedEmployee.Salary,
+        employeeBankAcc:
+          selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
+        employeeRole: selectedEmployee.role,
+        month,
+        year,
+        status: "pending",
+        requestedBy: loggedInUser.email,
+      };
+      payrollMutation.mutate(requestData);
 
-    const requestData = {
-      employeeId: selectedEmployee._id,
-      employeeName: selectedEmployee.name,
-      employeeEmail: selectedEmployee.email,
-      employeeSalary: selectedEmployee.Salary,
-      employeeBankAcc:
-        selectedEmployee.bankAccountNo || selectedEmployee.bank_account_no,
-      employeeRole: selectedEmployee.role,
-      month,
-      year,
-      status: "pending",
-      requestedBy: loggedInUser.email,
-    };
-    payrollMutation.mutate(requestData);
+    }
+
   };
 
   const handleViewDetails = (email) => {
@@ -164,14 +202,19 @@ export default function EmployeeList() {
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => handleVerifyToggle(emp)}
-                      className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors ${
-                        emp.isVerified
-                          ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                          : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                      }`}
+                      disabled={emp.status === "fired"}
+                      className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors ${emp.isVerified
+                        ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                        : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+                        } ${emp.status === "fired"
+                          ? "cursor-not-allowed" // show 'not-allowed' cursor if fired
+                          : "cursor-pointer" // normal clickable cursor
+                        }`}
+                      title={emp.status === "fired" ? "Employee Fired" : "Employee Active"} // Tooltip on hover
                     >
                       {emp.isVerified ? "Verified ✅" : "Not Verified ❌"}
                     </button>
+
                   </td>
                   <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
                     {emp.bank_account_no || emp.bankAccountNo || "-"}
@@ -182,13 +225,13 @@ export default function EmployeeList() {
                   <td className="px-4 py-3 text-center">
                     <Button
                       size="sm"
-                      disabled={!emp.isVerified}
-                      className={`${
-                        !emp.isVerified
-                          ? "opacity-50 cursor-not-allowed"
-                          : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                      }`}
+                      disabled={!emp.isVerified || emp.status === "fired"}
+                      className={`${!emp.isVerified
+                        ? "opacity-50 cursor-not-allowed"
+                        : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                        }`}
                       onClick={() => handlePayClick(emp)}
+                      title={emp.status === "fired" ? "Employee Fired" : "Employee Active"}
                     >
                       Pay
                     </Button>

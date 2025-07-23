@@ -114,7 +114,7 @@ const EmployeeWorksheet = () => {
 
         <form
           onSubmit={handleAddWork}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          className="flex flex-wrap gap-4 items-end"
         >
           {/* Work Name */}
           <div>
@@ -206,7 +206,7 @@ const EmployeeWorksheet = () => {
 
           {/* Submit */}
           <div className="flex sm:col-span-2 lg:col-span-1 items-end">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full hover:scale-110 font-semibold mb-1">
               Add Task
             </Button>
           </div>
@@ -256,13 +256,14 @@ const EmployeeWorksheet = () => {
                     <Button
                       variant="secondary"
                       onClick={() => handleEditClick(work)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 font-semibold bg-blue-300 hover:bg-blue-800 hover:text-gray-100 text-gray-900 hover:scale-110"
                     >
                       <FaRegEdit /> Edit
                     </Button>
                     <Button
                       variant="destructive"
                       onClick={() => handleDeleteWork(work._id)}
+                      className='font-semibold hover:bg-red-500 hover:scale-110'
                     >
                       ❌ Delete
                     </Button>

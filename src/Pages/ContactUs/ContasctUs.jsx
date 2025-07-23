@@ -10,7 +10,7 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ContactUs() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 py-6">
       
       {/* Hero Section */}
       <section className="relative h-[50vh] flex flex-col md:flex-row items-center justify-center text-center md:text-left px-6 md:px-16">
@@ -28,7 +28,7 @@ export default function ContactUs() {
           </p>
         </motion.div>
         <motion.div
-          className="md:w-1/2 max-w-md mt-6 md:mt-0"
+          className="md:w-1/3 max-w-md mt-6 md:mt-0"
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}

@@ -115,6 +115,18 @@ export default function ProgressPage() {
     ];
   }, [workRecords]);
 
+  const [page, setPage] = useState(1);
+  const pageSize = 10; // ✅ Show 10 rows per page
+
+   // ✅ Total pages
+  const totalPages = Math.ceil((filteredRecords?.length || 0) / pageSize);
+
+  // ✅ Slice the data for current page
+  const paginatedRecords = filteredRecords?.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
   // ✅ Now safe to return conditionally
   if (loading)
     return (
@@ -213,46 +225,80 @@ export default function ProgressPage() {
           </TableHeader>
 
           <TableBody>
-            {filteredRecords?.length > 0 ? (
-              filteredRecords.map((record) => {
-                const validDate =
-                  record?.completionDate &&
-                  isValid(new Date(record.completionDate))
-                    ? format(new Date(record.completionDate), "dd MMM yyyy")
-                    : "Invalid date";
+        {paginatedRecords?.length > 0 ? (
+          paginatedRecords.map((record) => {
+            const validDate =
+              record?.completionDate &&
+              isValid(new Date(record.completionDate))
+                ? format(new Date(record.completionDate), "dd MMM yyyy")
+                : "Invalid date";
 
-                return (
-                  <TableRow
-                    key={record._id || record.email || Math.random()}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                  >
-                    <TableCell className="text-gray-800 dark:text-gray-300">
-                      {record.email ?? "Unknown"}
-                    </TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">
-                      {record.workName ?? "No task name"}
-                    </TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">
-                      {validDate}
-                    </TableCell>
-                    <TableCell className="text-gray-800 dark:text-gray-300">
-                      {record.finishHour ?? "-"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan="4"
-                  className="text-center text-gray-500 dark:text-gray-400 py-4"
-                >
-                  No records found
+            return (
+              <TableRow
+                key={record._id || record.email || Math.random()}
+                className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <TableCell className="text-gray-800 dark:text-gray-300">
+                  {record.email ?? "Unknown"}
+                </TableCell>
+                <TableCell className="text-gray-800 dark:text-gray-300">
+                  {record.workName ?? "No task name"}
+                </TableCell>
+                <TableCell className="text-gray-800 dark:text-gray-300">
+                  {validDate}
+                </TableCell>
+                <TableCell className="text-gray-800 dark:text-gray-300">
+                  {record.finishHour ?? "-"}
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
+            );
+          })
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan="4"
+              className="text-center text-gray-500 dark:text-gray-400 py-4"
+            >
+              No records found
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+
+      
         </Table>
+        {/* ✅ Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-between items-center mt-4">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((prev) => prev - 1)}
+            className={`px-3 py-1 rounded ${
+              page === 1
+                ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+          >
+            Prev
+          </button>
+
+          <span className="text-gray-700 dark:text-gray-300">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage((prev) => prev + 1)}
+            className={`px-3 py-1 rounded ${
+              page === totalPages
+                ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
       </div>
     </Card>
   );

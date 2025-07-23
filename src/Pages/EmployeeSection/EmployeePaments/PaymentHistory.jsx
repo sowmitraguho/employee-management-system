@@ -19,7 +19,7 @@ const fetchPayments = async (email, page) => {
     const res = await useProtectedAxios.get(
       `payments/${email}?page=${page}&limit=5`
     );
-    console.log("Payment data:", res.data);
+    //console.log("Payment data:", res.data);
     return res.data;
   } catch (error) {
     console.error("Error fetching payments:", error);
@@ -45,6 +45,7 @@ export default function PaymentHistory() {
 
   if (isLoading) return <PaymentSkeleton />;
   if (isError) return <p className="text-red-500">Failed to load payment history</p>;
+  
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -55,6 +56,7 @@ export default function PaymentHistory() {
             <TableRow>
               <TableHead>Month / Year</TableHead>
               <TableHead>Amount</TableHead>
+              <TableHead>Payment Status</TableHead>
               <TableHead>Transaction ID</TableHead>
             </TableRow>
           </TableHeader>

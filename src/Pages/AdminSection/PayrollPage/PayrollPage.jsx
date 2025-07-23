@@ -37,6 +37,15 @@ export default function PayrollPage() {
     },
   });
 
+  const uniquePayrollData = payrollData.filter((item, index, self) =>
+  index === self.findIndex(
+    t =>
+      t.employeeEmail === item.employeeEmail &&
+      t.month === item.month &&
+      t.year === item.year
+  )
+);
+
   // ✅ Mutation for Admin → Approve/Reject payroll
   const updatePayrollStatus = useMutation({
     mutationFn: async ({ id, status }) => {
@@ -49,10 +58,12 @@ export default function PayrollPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["payroll"]);
+      refetch;
     },
   });
 
@@ -111,9 +122,10 @@ export default function PayrollPage() {
               </TableHeader>
 
               <TableBody>
-                {payrollData.map((record) => {
+                {uniquePayrollData.map((record) => {
                   // Badge color based on status
                   const statusClasses =
+                  record.employeeStatus === "fired" ? "bg-red-500" :
                     record.status === "pending"
                       ? "bg-yellow-500"
                       : record.status === "approved"
@@ -141,9 +153,9 @@ export default function PayrollPage() {
                       </TableCell>
                       <TableCell>
                         <span
-                          className={`px-2 py-1 rounded-full text-white text-xs sm:text-sm ${statusClasses}`}
+                          className={`capitalize px-2 py-1 rounded-full text-white text-xs sm:text-sm ${statusClasses}`}
                         >
-                          {record.status}
+                          {record.employeeStatus === "fired" ? record.employeeStatus : record.status}
                         </span>
                       </TableCell>
                       <TableCell className="text-gray-700 dark:text-gray-300">
@@ -152,7 +164,7 @@ export default function PayrollPage() {
                           : "-"}
                       </TableCell>
                       <TableCell>
-                        {role === "admin" && record.status === "pending" && (
+                        {role === "admin" && record.status === "pending" && !(record.employeeStatus === "fire") && (
                           <div className="flex flex-col sm:flex-row gap-2">
                             {/* ✅ Pay Now Button */}
                             <Button

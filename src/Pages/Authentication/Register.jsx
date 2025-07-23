@@ -132,6 +132,12 @@ const Register = () => {
           photoURL: currentUser.photoURL,
           role: "employee",
           designation: "Representative",
+          bankAccountNo: "Acc257739767",
+          status: "active",
+          isVerified: true,
+          imageUrl: currentUser.photoURL,
+          salary: 25000,
+          Salary: 25000
         });
 
         await Swal.fire({
