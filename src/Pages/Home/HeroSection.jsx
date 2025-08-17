@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import Particles from "../../Components/BackgroundAnimation/Particles";
+
 //import heroImg from ""; // Replace with your image
 
 export default function HeroSection() {
@@ -19,20 +21,19 @@ export default function HeroSection() {
     bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-400  
     dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
   ">
-      {/* Animated Floating Shapes */}
-      {floatingShapes.map((shape, idx) => (
-        <motion.div
-          key={idx}
-          className={`absolute rounded-full opacity-20 ${shape.color} ${shape.size} ${shape.top || ""} ${shape.left || ""} ${shape.right || ""} ${shape.bottom || ""}`}
-          animate={{ y: [0, 20, 0] }}
-          transition={{
-            repeat: Infinity,
-            duration: shape.duration,
-            delay: shape.delay,
-            ease: "easeInOut",
-          }}
+      {/* Background Animation */} 
+      <div style={{ width: '100%', height: '600px', position: 'absolute' }}>
+        <Particles
+          particleColors={['#ffffff', '#ffffff']}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
         />
-      ))}
+      </div>
 
       {/* Wave Shape at Bottom */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
