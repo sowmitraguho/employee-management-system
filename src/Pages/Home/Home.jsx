@@ -10,6 +10,7 @@ import PricingSection from "./PricingSection";
 import MessageUsSection from "./MessageUsSection";
 import Footer from "../Shared/Footer/Footer";
 import CompanyLogoSlider from "./CompanyLogoSlider";
+import InvitationSection from "./InvitationSection";
 
 export default function HomePage() {
   return (
@@ -36,6 +37,9 @@ export default function HomePage() {
 
       {/* pricing section */}
       <PricingSection/>
+
+      {/* Invitation section */}
+      <InvitationSection/>
 
       {/* message us section */}
       <MessageUsSection/>

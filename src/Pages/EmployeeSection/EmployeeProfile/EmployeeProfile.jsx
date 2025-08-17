@@ -18,7 +18,7 @@ import {
 } from "recharts"
 import { motion } from "framer-motion"
 
-// ✅ Fake data
+//  Fake data
 const performanceData = [
   { month: "Jan", tasks: 20 },
   { month: "Feb", tasks: 28 },
@@ -61,7 +61,7 @@ export default function EmployeeProfile() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* ✅ Performance Graph */}
+      {/*  Performance Graph */}
       <Card className="dark:bg-gray-900 shadow-lg">
         <CardHeader className='bg-gradient-to-r from-indigo-500 to-purple-500'>
           <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
@@ -81,7 +81,7 @@ export default function EmployeeProfile() {
         </CardContent>
       </Card>
 
-      {/* ✅ Works / Projects */}
+      {/*  Works / Projects */}
       <Card className="dark:bg-gray-900 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500">
           <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
@@ -112,7 +112,7 @@ export default function EmployeeProfile() {
         </CardContent>
       </Card>
 
-      {/* ✅ Skills Section */}
+      {/*  Skills Section */}
       <Card className="dark:bg-gray-900 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500">
           <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
@@ -132,7 +132,7 @@ export default function EmployeeProfile() {
         </CardContent>
       </Card>
 
-      {/* ✅ Certifications */}
+      {/*  Certifications */}
       <Card className="dark:bg-gray-900 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-500">
           <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">
@@ -148,7 +148,7 @@ export default function EmployeeProfile() {
         </CardContent>
       </Card>
 
-      {/* ✅ HR & Admin Reviews */}
+      {/*  HR & Admin Reviews */}
       <Card className="dark:bg-gray-900 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-purple-500 to-fuchsia-500">
           <CardTitle className="text-xl font-bold text-gray-200 dark:text-gray-100">

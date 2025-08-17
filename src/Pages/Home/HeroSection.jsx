@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 //import heroImg from ""; // Replace with your image
 
 export default function HeroSection() {
-  // ✅ Floating shapes config (color, size, position, delay)
+  // Floating shapes config (color, size, position, delay)
   const floatingShapes = [
     { color: "bg-pink-400", size: "w-12 h-12", top: "top-10", left: "left-10", duration: 4, delay: 0 },
     { color: "bg-yellow-300", size: "w-16 h-16", top: "top-20", right: "right-12", duration: 5, delay: 1 },
@@ -16,10 +16,10 @@ export default function HeroSection() {
   return (
     <section className="
     relative overflow-hidden
-    bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-400   /* ✅ Light Mode */
-    dark:from-gray-900 dark:via-gray-800 dark:to-gray-900   /* ✅ Dark Mode */
+    bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-400  
+    dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 
   ">
-      {/* ✅ Animated Floating Shapes */}
+      {/* Animated Floating Shapes */}
       {floatingShapes.map((shape, idx) => (
         <motion.div
           key={idx}
@@ -34,7 +34,7 @@ export default function HeroSection() {
         />
       ))}
 
-      {/* ✅ Wave Shape at Bottom */}
+      {/* Wave Shape at Bottom */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
         <svg
           className="relative block w-full h-24 md:h-32 lg:h-40"
@@ -49,7 +49,7 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* ✅ Hero Content */}
+      {/* Hero Content */}
       <div className="container mx-auto px-6 py-20 flex flex-col-reverse md:flex-row items-center justify-between relative z-10">
         {/* Left Text with Animation */}
         <motion.div
@@ -85,7 +85,7 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* ✅ Right Illustration with Floating Animation */}
+        {/* Right Illustration with Floating Animation */}
         <motion.div
           className="relative mb-10 md:mb-0"
           animate={{

@@ -18,11 +18,13 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
   const hrLinks = [
     { to: "/dashboard/employeelist", label: "Employee List", icon: <FaUsers /> },
     { to: "/dashboard/progress", label: "Progress", icon: <FaChartBar /> },
+    { to: "/dashboard/userdetails", label: "Your Profile", icon: <FaUserCheck /> },
   ];
 
   const adminLinks = [
-    { to: "/dashboard/adminemployeelist", label: "All Employees", icon: <FaUserCheck /> },
+    { to: "/dashboard/adminemployeelist", label: "All Employees", icon: <FaUsers/> },
     { to: "/dashboard/payroll", label: "Payroll", icon: <FaMoneyCheck /> },
+    { to: "/dashboard/userdetails", label: "Your Profile", icon: <FaUserCheck /> },
   ];
 
   const employeeLinks = [
@@ -37,6 +39,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
       label: "Payment History",
       icon: <FaMoneyCheck />,
     },
+    { to: "/dashboard/userdetails", label: "Your Information", icon: <FaUserCheck /> },
   ];
 
   const links = [
@@ -47,7 +50,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>
-      {/* ✅ Sidebar */}
+      {/* Sidebar */}
       <div
         className={`
           fixed md:static top-0 left-0 h-view w-64 bg-white dark:bg-gray-900 
@@ -56,7 +59,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        {/* ✅ Sidebar Header */}
+        {/*  Sidebar Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-800">
           <Link to='/dashboard'>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-100">
@@ -75,7 +78,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
 
-        {/* ✅ Navigation Links */}
+        {/* Navigation Links */}
         <nav className="p-4 space-y-2">
           {links.map(({ to, label, icon }) => (
             <Link
@@ -92,7 +95,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
           ))}
         </nav>
 
-        {/* ✅ Bottom Section: Lottie Animation (shows on md+ screens) */}
+        {/* Bottom Section: Lottie Animation (shows on md+ screens) */}
         <div className="hidden md:flex items-center justify-center mt-auto mb-6 px-4">
           <div className="bg-gradient-to-tr from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4">
             <Lottie
@@ -104,7 +107,7 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
         </div>
       </div>
 
-      {/* ✅ Overlay on small screens */}
+      {/* Overlay on small screens */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}

@@ -38,7 +38,7 @@ export default function AdminEmployeesPage() {
   const { loggedInUser } = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [viewMode, setViewMode] = useState("table"); // ✅ toggle between table and card
+  const [viewMode, setViewMode] = useState("table"); //  toggle between table and card
 
   // Fetch all verified users
   const fetchEmployees = async () => {
@@ -183,7 +183,7 @@ export default function AdminEmployeesPage() {
           Verified Employees
         </h1>
 
-        {/* ✅ View Toggle Button */}
+        {/*  View Toggle Button */}
         <Button
           variant="outline"
           className="flex items-center gap-2"
@@ -196,7 +196,7 @@ export default function AdminEmployeesPage() {
         </Button>
       </div>
 
-      {/* ✅ TABLE VIEW */}
+      {/*  TABLE VIEW */}
       {viewMode === "table" && (
         <div className="overflow-x-auto shadow-md rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <Table className="min-w-full text-left">
@@ -231,7 +231,7 @@ export default function AdminEmployeesPage() {
                     )}
                   </TableCell>
 
-                  {/* ✅ Make HR */}
+                  {/*  Make HR */}
                   <TableCell className="text-center">
                     {emp.role === "employee" && emp.status !== "fired" ? (
                       <Button size="sm" variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-50" onClick={() => makeHR(emp._id)}>
@@ -244,7 +244,7 @@ export default function AdminEmployeesPage() {
                     )}
                   </TableCell>
 
-                  {/* ✅ Adjust Salary */}
+                  {/*  Adjust Salary */}
                   <TableCell className="text-center">
                     {emp.status !== "fired" ? (
                       <Button size="sm" variant="secondary" className="bg-teal-500 hover:bg-teal-600 text-white" onClick={() => {
@@ -256,7 +256,7 @@ export default function AdminEmployeesPage() {
                     ) : "-"}
                   </TableCell>
 
-                  {/* ✅ Fire */}
+                  {/*  Fire */}
                   <TableCell className="text-center">
                     {emp.status === "fired" ? (
                       <span className="text-red-500 font-semibold">Fired</span>
@@ -276,7 +276,7 @@ export default function AdminEmployeesPage() {
         </div>
       )}
 
-      {/* ✅ CARD GRID VIEW */}
+      {/*  CARD GRID VIEW */}
       {viewMode === "card" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {employees.map((emp) => (
@@ -311,7 +311,7 @@ export default function AdminEmployeesPage() {
               </CardContent>
 
               <CardFooter className="flex flex-wrap gap-2 justify-between">
-                {/* ✅ Make HR */}
+                {/*  Make HR */}
                 {emp.role === "employee" && emp.status !== "fired" ? (
                   <Button size="sm" variant="outline" className="border border-blue-400" onClick={() => makeHR(emp._id)}>
                     Make HR
@@ -320,7 +320,7 @@ export default function AdminEmployeesPage() {
                   <span className="text-green-600 font-medium text-sm">Already HR</span>
                 ) : null}
 
-                {/* ✅ Adjust Salary */}
+                {/*  Adjust Salary */}
                 {emp.status !== "fired" && (
                   <Button
                     size="sm"
@@ -335,7 +335,7 @@ export default function AdminEmployeesPage() {
                   </Button>
                 )}
 
-                {/* ✅ Fire */}
+                {/*  Fire */}
                 {emp.status !== "fired" && (
                   <Button
                     size="sm"
@@ -354,7 +354,7 @@ export default function AdminEmployeesPage() {
         </div>
       )}
 
-      {/* ✅ Fire Confirmation Modal */}
+      {/*  Fire Confirmation Modal */}
       <Dialog open={fireModalOpen} onOpenChange={setFireModalOpen}>
         <DialogContent className="rounded-lg">
           <DialogHeader>
@@ -379,7 +379,7 @@ export default function AdminEmployeesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ Salary Adjust Modal */}
+      {/*  Salary Adjust Modal */}
       <Dialog open={salaryModalOpen} onOpenChange={setSalaryModalOpen}>
         <DialogContent className="rounded-lg">
           <DialogHeader>
