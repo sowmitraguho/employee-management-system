@@ -6,7 +6,7 @@ import contactAnim from "../../assets/Lottifiles/Email.json";
 
 export default function MessageUsSection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
     <section

@@ -150,7 +150,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-3xl font-bold">Want to join our team?</h2>
-          <p className="mt-2 text-lg">We’re always looking for talented people.</p>
+          <p className="mt-2 text-lg">We're always looking for talented people.</p>
           <a
             href="/contactus"
             className="inline-block mt-4 bg-white text-blue-600 px-6 py-2 rounded-xl font-semibold hover:bg-gray-200"

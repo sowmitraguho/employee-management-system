@@ -25,7 +25,7 @@ const Navbar = () => {
   if(loading) return <Spinner/>;
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-800 z-50">
+    <header className="bg-white dark:bg-gray-900  sticky top-0 shadow-md border-b border-gray-200 dark:border-gray-800 z-50">
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Left: Logo */}
         <Link to="/" className="flex items-center gap-2">
@@ -139,7 +139,7 @@ const Navbar = () => {
           </Link>
           
           <Link
-            to="/contact"
+            to="/contactus"
             className="text-md font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition hover:from-red-500 hover:via-pink-500 hover:to-blue-500"
           >
             Contact Us

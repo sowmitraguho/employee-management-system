@@ -1,39 +1,41 @@
 import React from "react";
-import { FiUsers, FiSettings, FiDollarSign, FiClipboard } from "react-icons/fi";
+//import { FiUsers, FiSettings, FiDollarSign, FiClipboard } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import AnimatedCube from "./AnimatedCube";
+import { FiUsers, FiSettings, FiDollarSign, FiClipboard, FiShield, FiBarChart2 } from "react-icons/fi";
+import { MdOutlineCampaign } from "react-icons/md";
+import { FaPencilRuler } from "react-icons/fa";
 
 const services = [
   {
-    id: 1,
-    icon: <FiUsers className="text-indigo-500 w-12 h-12" />,
-    title: "Employee Management",
+    id: 5,
+    icon: <MdOutlineCampaign className="text-blue-500 w-12 h-12" />,
+    title: "Digital Marketing",
     description:
-      "Manage employee records, track attendance, and monitor performance efficiently.",
+      "Promote services online, manage campaigns, and track marketing performance insights.",
   },
   {
-    id: 2,
-    icon: <FiSettings className="text-green-500 w-12 h-12" />,
-    title: "Role & Permissions",
+    id: 6,
+    icon: <FiShield className="text-red-500 w-12 h-12" />,
+    title: "Security System",
     description:
-      "Assign roles and control access to features based on employee responsibilities.",
+      "Protect sensitive data, ensure secure access, and safeguard the system from threats.",
   },
   {
-    id: 3,
-    icon: <FiDollarSign className="text-yellow-500 w-12 h-12" />,
-    title: "Payroll & Salary",
+    id: 7,
+    icon: <FaPencilRuler className="text-purple-500 w-12 h-12" />,
+    title: "UI/UX Design",
     description:
-      "Handle salary calculations, payments, and keep track of payment history seamlessly.",
+      "Design intuitive interfaces, improve user experience, and build engaging applications.",
   },
   {
-    id: 4,
-    icon: <FiClipboard className="text-pink-500 w-12 h-12" />,
-    title: "Task & Workflow",
+    id: 8,
+    icon: <FiBarChart2 className="text-orange-500 w-12 h-12" />,
+    title: "Data Analysis",
     description:
-      "Organize employee tasks, set deadlines, and monitor workflow progress effectively.",
+      "Analyze business data, generate reports, and gain valuable insights for decisions.",
   },
 ];
 
@@ -83,7 +85,7 @@ export default function ServicesSection() {
         </div>
 
         {/* Right side: 3D illustration */}
-        <div className="flex-1 w-full max-w-md h-80 sm:h-96">
+        <div className="hidden md:flex flex-1 w-full max-w-md h-80 sm:h-96 mt-24">
           <Canvas shadows camera={{ position: [3, 3, 3], fov: 50 }}>
             <ambientLight intensity={0.3} />
             <directionalLight position={[5, 5, 5]} intensity={1} />

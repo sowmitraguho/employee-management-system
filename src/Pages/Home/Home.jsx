@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle } from "lucide-react";
 import HeroSection from "./HeroSection";
 import AboutSection from "./AboutSection";
 import ServicesSection from "./ServicesSection";
+import ProjectsSection from "./ProjectsSection";
 import TestimonialSection from "./TestimonialSection";
 import PricingSection from "./PricingSection";
 import MessageUsSection from "./MessageUsSection";
@@ -13,20 +14,23 @@ import CompanyLogoSlider from "./CompanyLogoSlider";
 export default function HomePage() {
   return (
     <div className="flex flex-col">
-      {/* ✅ Hero Section */}
+      {/*  Hero Section */}
       <HeroSection/>
 
-      {/* ✅ About Section */}
+      {/*  About Section */}
       <AboutSection/>
 
        {/* Company Logo Slider Section */}
       <CompanyLogoSlider/>
 
-      {/* ✅ Services Section */}
+      {/*  Services Section */}
      
       <ServicesSection/>
 
-      {/* ✅ Testimonials Section */}
+      {/*  Projects Section */}
+      <ProjectsSection/>
+
+      {/*  Testimonials Section */}
      
       <TestimonialSection/>
 
