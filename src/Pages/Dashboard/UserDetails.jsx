@@ -15,12 +15,12 @@ const UserDetails = () => {
     console.log('from user details', loggedInUser, currentUser);
     const baseURL = import.meta.env.VITE_API_URL;
     const [user, setUser] = useState({
-        image: currentUser?.imageUrl,
+        imageUrl: currentUser?.imageUrl,
         name: currentUser?.name,
         email: currentUser?.email,
-        phone: "+1 234 567 890",
-        address: "123 Tech Street, New York, USA",
-        joiningDate: "2022-06-15",
+        phone: currentUser?.phone,
+        address: currentUser?.address,
+        joiningDate: currentUser?.joiningDate,
         role: currentUser?.role,
         designation: currentUser?.designation,
         department: currentUser?.department,
@@ -36,23 +36,25 @@ const UserDetails = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleImageUpload = async () => {
-        if (!file) return formData.image;
+    const handleImageUpload = async (imagefile) => {
+       // if (!file) return formData.image;
 
         const form = new FormData();
-        form.append("image", file);
+        form.append("image", imagefile);
 
         const res = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbbApiKey}`, {
             method: "POST",
             body: form,
         });
         const data = await res.json();
-        return data.data.url;
+        console.log(data.data.display_url);
+        setFile(data.data.display_url);
+        return data.data.display_url;
     };
 
     const handleSave = async () => {
-        const uploadedImage = await handleImageUpload();
-        const updatedUser = { ...formData, image: uploadedImage };
+        const uploadedImage = file;
+        const updatedUser = { ...formData, imageUrl: uploadedImage };
         const token = await loggedInUser.getIdToken(true);
         try {
             await axios.patch(
@@ -86,7 +88,7 @@ const UserDetails = () => {
                 </CardHeader>
                 <CardContent className="flex gap-6 p-6">
                     <img
-                        src={user.image}
+                        src={user.imageUrl}
                         alt={user.name}
                         className="w-32 h-32 rounded-full object-cover border-2 border-indigo-500"
                     />
@@ -143,7 +145,7 @@ const UserDetails = () => {
                         </div>
                         <div>
                             <Label>Upload Image</Label>
-                            <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+                            <Input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0])} />
                         </div>
                     </div>
 
