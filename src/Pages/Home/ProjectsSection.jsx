@@ -43,7 +43,7 @@ const projects = [
 
 export default function ProjectsSection() {
     return (
-        <section className="py-16 px-8 bg-gray-50 dark:bg-gray-900 ">
+        <section id="projects" className="py-16 px-8 bg-gray-50 dark:bg-gray-900 ">
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row  gap-12">
                 <div className="flex-1 text-center lg:text-left">
                     <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-6">

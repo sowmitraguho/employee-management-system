@@ -6,6 +6,7 @@ import {
   FaUsers,
   FaMoneyCheck,
   FaTimes,
+  FaHome
 } from "react-icons/fa";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import ThemeToggle from "../../../Components/ui/ThemeToggle";
@@ -22,9 +23,12 @@ const DashboardSidebar = ({ role, sidebarOpen, setSidebarOpen }) => {
   ];
 
   const adminLinks = [
+    { to: "/dashboard/hpagedata", label: "Homepage Data", icon: <FaHome /> },
+    { to: "/dashboard/userdetails", label: "Your Profile", icon: <FaUserCheck /> },
     { to: "/dashboard/adminemployeelist", label: "All Employees", icon: <FaUsers/> },
     { to: "/dashboard/payroll", label: "Payroll", icon: <FaMoneyCheck /> },
-    { to: "/dashboard/userdetails", label: "Your Profile", icon: <FaUserCheck /> },
+    
+    
   ];
 
   const employeeLinks = [

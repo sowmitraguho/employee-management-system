@@ -17,6 +17,7 @@ import PayrollPage from "../../Pages/AdminSection/PayrollPage/PayrollPage"
 import ContactUs from "../../Pages/ContactUs/ContasctUs"
 import EmployeeProfile from "../../Pages/EmployeeSection/EmployeeProfile/EmployeeProfile"
 import UserDetails from "../../Pages/Dashboard/UserDetails"
+import HomepageDataPage from "../../Pages/AdminSection/HomePageData/HomepageDataPage"
 
 const routes = createBrowserRouter([
     {
@@ -45,6 +46,7 @@ const routes = createBrowserRouter([
             { path: 'adminemployeelist', Component: AdminEmployeesPage },
             { path: 'employeeprofile', Component: EmployeeProfile },
             { path: 'payroll', Component: PayrollPage },
+            { path: 'hpagedata', Component: HomepageDataPage },
             { path: 'userdetails', Component: UserDetails }
         ]
     }

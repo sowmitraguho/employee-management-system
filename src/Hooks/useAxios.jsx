@@ -21,7 +21,7 @@ const useAxios = (baseURL) => {
       data,
       {
         headers: { 'Content-Type': 'application/json', ...config.headers },
-        withCredentials: true, // if you use cookies/auth
+        withCredentials: true, 
         ...config
       }
     );

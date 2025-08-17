@@ -5,16 +5,7 @@ import Particles from "../../Components/BackgroundAnimation/Particles";
 //import heroImg from ""; // Replace with your image
 
 export default function HeroSection() {
-  // Floating shapes config (color, size, position, delay)
-  const floatingShapes = [
-    { color: "bg-pink-400", size: "w-12 h-12", top: "top-10", left: "left-10", duration: 4, delay: 0 },
-    { color: "bg-yellow-300", size: "w-16 h-16", top: "top-20", right: "right-12", duration: 5, delay: 1 },
-    { color: "bg-purple-400", size: "w-10 h-10", bottom: "bottom-24", left: "left-1/4", duration: 6, delay: 0.5 },
-    { color: "bg-blue-300", size: "w-14 h-14", bottom: "bottom-32", right: "right-20", duration: 7, delay: 1.2 },
-    { color: "bg-green-300", size: "w-8 h-8", top: "top-40", left: "left-1/3", duration: 5.5, delay: 0.8 },
-    { color: "bg-red-400", size: "w-6 h-6", bottom: "bottom-16", right: "right-1/4", duration: 4.5, delay: 1.5 },
-  ];
-
+  
   return (
     <section className="
     relative overflow-hidden
@@ -75,13 +66,13 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <Button className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white hover:opacity-90 text-lg font-semibold px-8 py-6">
-              Learn More
+              <a href="#projects">Learn More</a>
             </Button>
             <Button
               variant="outline"
               className="border-white text-blue-500 hover:border-blue-500 hover:text-purple-500 text-lg font-semibold px-8 py-6 rounded-md"
             >
-              Our Services
+              <a href="#services">Our Services</a>
             </Button>
           </motion.div>
         </motion.div>

@@ -12,7 +12,7 @@ import axios from "axios";
 const UserDetails = () => {
     const { loggedInUser } = useContext(AuthContext);
     const { currentUser } = useOutletContext();
-    console.log('from user details', loggedInUser, currentUser);
+    console.log('from user details', currentUser);
     const baseURL = import.meta.env.VITE_API_URL;
     const [user, setUser] = useState({
         imageUrl: currentUser?.imageUrl,
@@ -54,7 +54,8 @@ const UserDetails = () => {
 
     const handleSave = async () => {
         const uploadedImage = file;
-        const updatedUser = { ...formData, imageUrl: uploadedImage };
+        const updatedUser = { ...formData, imageUrl: uploadedImage? uploadedImage : formData.imageUrl };
+        console.log("Updated User:", updatedUser);
         const token = await loggedInUser.getIdToken(true);
         try {
             await axios.patch(
@@ -81,18 +82,18 @@ const UserDetails = () => {
         <div className="max-w-7xl mx-auto my-12">
             <Card className="dark:bg-gray-900">
                 <CardHeader className="flex justify-between items-center">
-                    <CardTitle className="text-2xl dark:text-gray-100">Your Details Information</CardTitle>
+                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-teal-500 text-transparent bg-clip-text">Your Details Information</CardTitle>
                     <Button variant="outline" onClick={() => setOpen(true)}>
                         <Edit className="w-4 h-4 mr-2" /> Edit
                     </Button>
                 </CardHeader>
-                <CardContent className="flex gap-6 p-6">
+                <CardContent className="flex flex-col md:flex-row gap-6 p-6 items-center">
                     <img
                         src={user.imageUrl}
                         alt={user.name}
                         className="w-32 h-32 rounded-full object-cover border-2 border-indigo-500"
                     />
-                    <div className="space-y-2 text-gray-800 dark:text-gray-200">
+                    <div className="text-xl space-y-2 text-gray-800 dark:text-gray-200">
                         <p><span className="font-semibold">Name:</span> {user.name}</p>
                         <p><span className="font-semibold">Email:</span> {user.email}</p>
                         <p><span className="font-semibold">Phone:</span> {user.phone}</p>
@@ -125,27 +126,31 @@ const UserDetails = () => {
                         </div>
                         <div>
                             <Label>Phone</Label>
-                            <Input name="phone" value={formData.phone} onChange={handleChange} />
+                            <Input name="phone" defaultValue={formData.phone} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Address</Label>
-                            <Input name="address" value={formData.address} onChange={handleChange} />
+                            <Input name="address" defaultValue={formData.address} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Designation</Label>
-                            <Input name="designation" value={formData.designation} onChange={handleChange} />
+                            <Input name="designation" defaultValue={formData.designation} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Department</Label>
-                            <Input name="department" value={formData.department} onChange={handleChange} />
+                            <Input name="department" defaultValue={formData.department} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <Label>Joining Date</Label>
+                            <Input name="joiningDate" type="date" defaultValue={formData.joiningDate} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Salary</Label>
-                            <Input name="salary" value={formData.salary} onChange={handleChange} />
+                            <Input name="salary" defaultValue={formData.salary} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Upload Image</Label>
-                            <Input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0])} />
+                            <Input type="file" defaultValue={formData.image} accept="image/*" onChange={(e) => handleImageUpload(e.target.files[0])} />
                         </div>
                     </div>
 

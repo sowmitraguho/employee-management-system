@@ -17,14 +17,11 @@ import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import PaymentModal from "./PaymentModal";
 
 export default function PayrollPage() {
-  const role = "admin"; // Can be dynamic later
+  const role = "admin"; 
   const queryClient = useQueryClient();
   const baseURL = import.meta.env.VITE_API_URL;
   const { loggedInUser } = useContext(AuthContext);
 
- 
-
-  // ✅ Fetch payroll data
   const {
     data: payrollData = [],
     isLoading,
@@ -37,16 +34,17 @@ export default function PayrollPage() {
     },
   });
 
-  const uniquePayrollData = payrollData.filter((item, index, self) =>
-  index === self.findIndex(
-    t =>
-      t.employeeEmail === item.employeeEmail &&
-      t.month === item.month &&
-      t.year === item.year
-  )
-);
+  const uniquePayrollData = payrollData.filter(
+    (item, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.employeeEmail === item.employeeEmail &&
+          t.month === item.month &&
+          t.year === item.year
+      )
+  );
 
-  // ✅ Mutation for Admin → Approve/Reject payroll
   const updatePayrollStatus = useMutation({
     mutationFn: async ({ id, status }) => {
       const token = await loggedInUser.getIdToken(true);
@@ -58,16 +56,25 @@ export default function PayrollPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["payroll"]);
-      refetch;
+      refetch();
     },
   });
 
   const [selectedPayroll, setSelectedPayroll] = useState(null);
+
+  // --- Pagination State ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5; // configurable
+
+  const totalPages = Math.ceil(uniquePayrollData.length / rowsPerPage);
+  const paginatedData = uniquePayrollData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   if (isLoading)
     return (
@@ -80,7 +87,7 @@ export default function PayrollPage() {
     );
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+    <div className="mx-auto my-6">
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-xl">
         <CardHeader className="text-center">
           <CardTitle className="text-xl sm:text-2xl font-bold text-indigo-700 dark:text-indigo-300">
@@ -92,41 +99,26 @@ export default function PayrollPage() {
         </CardHeader>
 
         <CardContent className="overflow-x-auto">
-          {/* ✅ Mobile friendly table wrapper */}
           <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
             <Table className="min-w-full text-sm sm:text-base">
               <TableHeader>
                 <TableRow className="bg-indigo-100 dark:bg-indigo-900">
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Employee
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Month
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Year
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Amount
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Status
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Payment Date
-                  </TableHead>
-                  <TableHead className="text-indigo-800 dark:text-indigo-300">
-                    Action
-                  </TableHead>
+                  <TableHead>Employee</TableHead>
+                  <TableHead>Month</TableHead>
+                  <TableHead>Year</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Payment Date</TableHead>
+                  <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
-                {uniquePayrollData.map((record) => {
-                  // Badge color based on status
+                {paginatedData.map((record) => {
                   const statusClasses =
-                  record.employeeStatus === "fired" ? "bg-red-500" :
-                    record.status === "pending"
+                    record.employeeStatus === "fired"
+                      ? "bg-red-500"
+                      : record.status === "pending"
                       ? "bg-yellow-500"
                       : record.status === "approved"
                       ? "bg-green-600"
@@ -135,40 +127,32 @@ export default function PayrollPage() {
                       : "bg-gray-500";
 
                   return (
-                    <TableRow
-                      key={record._id}
-                      className="hover:bg-blue-50 dark:hover:bg-gray-800 transition-all"
-                    >
-                      <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                        {record.employeeName}
-                      </TableCell>
-                      <TableCell className="text-gray-700 dark:text-gray-300">
-                        {record.month}
-                      </TableCell>
-                      <TableCell className="text-gray-700 dark:text-gray-300">
-                        {record.year}
-                      </TableCell>
-                      <TableCell className="text-gray-900 dark:text-gray-100 font-semibold">
+                    <TableRow key={record._id}>
+                      <TableCell>{record.employeeName}</TableCell>
+                      <TableCell>{record.month}</TableCell>
+                      <TableCell>{record.year}</TableCell>
+                      <TableCell className="font-semibold">
                         💲{record.employeeSalary}
                       </TableCell>
                       <TableCell>
                         <span
                           className={`capitalize px-2 py-1 rounded-full text-white text-xs sm:text-sm ${statusClasses}`}
                         >
-                          {record.employeeStatus === "fired" ? record.employeeStatus : record.status}
+                          {record.employeeStatus === "fired"
+                            ? record.employeeStatus
+                            : record.status}
                         </span>
                       </TableCell>
-                      <TableCell className="text-gray-700 dark:text-gray-300">
+                      <TableCell>
                         {record.paymentDate
                           ? new Date(record.paymentDate).toLocaleDateString()
                           : "-"}
                       </TableCell>
                       <TableCell>
-                        {role === "admin" && record.status === "pending" && !(record.employeeStatus === "fire") && (
+                        {role === "admin" && record.status === "pending" && (
                           <div className="flex flex-col sm:flex-row gap-2">
-                            {/* ✅ Pay Now Button */}
                             <Button
-                              className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+                              className="bg-green-600 hover:bg-green-700"
                               onClick={() =>
                                 setSelectedPayroll({
                                   ...record,
@@ -176,13 +160,10 @@ export default function PayrollPage() {
                                 })
                               }
                             >
-                              ✅ Pay Now
+                              Pay Now
                             </Button>
-
-                            {/* ✅ Reject Button */}
                             <Button
                               variant="destructive"
-                              className="w-full sm:w-auto"
                               onClick={() =>
                                 updatePayrollStatus.mutate({
                                   id: record._id,
@@ -194,12 +175,6 @@ export default function PayrollPage() {
                             </Button>
                           </div>
                         )}
-
-                        {role === "employee" && (
-                          <span className="text-gray-500 dark:text-gray-400">
-                            -
-                          </span>
-                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -207,10 +182,30 @@ export default function PayrollPage() {
               </TableBody>
             </Table>
           </div>
+
+          {/* --- Pagination Controls --- */}
+          <div className="flex justify-between items-center mt-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <Button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      {/* ✅ Payment Modal */}
       <PaymentModal
         open={!!selectedPayroll}
         onClose={() => setSelectedPayroll(null)}

@@ -37,7 +37,7 @@ export default function MessageUsSection() {
                 hear from you!
               </p>
 
-              {/* ✅ Contact Info + Lottie side-by-side on large, stacked on mobile */}
+              {/*  Contact Info + Lottie side-by-side on large, stacked on mobile */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                 {/* Contact info */}
                 <div className="space-y-4 flex-1">
@@ -54,7 +54,7 @@ export default function MessageUsSection() {
                   </div>
                 </div>
 
-                {/* ✅ Lottie Animation - responsive size */}
+                {/*  Lottie Animation - responsive size */}
                 <div className="flex justify-center sm:justify-end">
                   <div className="w-40 h-40 sm:w-56 sm:h-56 lg:w-72 lg:h-72">
                     <Lottie animationData={contactAnim} loop={true} />
@@ -110,7 +110,7 @@ export default function MessageUsSection() {
                 />
               </div>
 
-              {/* ✅ Submit button with hover animation */}
+              {/*  Submit button with hover animation */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
