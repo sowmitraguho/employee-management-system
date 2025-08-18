@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { se } from "date-fns/locale/se";
 
-export default function CompanyLogoSlider() {
-
-    const logos = [
+export default function CompanyLogoSlider({logos}) {
+    const [defaultLogos, setDefaultLogos] = useState([
   "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
   "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
   "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
@@ -12,13 +12,13 @@ export default function CompanyLogoSlider() {
   "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg",
   "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
   "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
-  
-];
-
+]);
+    useEffect(() => {
+        if (logos && logos.length > 0) setDefaultLogos(logos);
+    }, [logos]);
 
     // Duplicate for seamless loop
-    const loopLogos = [...logos, ...logos];
-    
+    const loopLogos = [...defaultLogos, ...defaultLogos];
 
     return (
         <section className="relative py-10 overflow-hidden bg-gray-50 dark:bg-gray-900">

@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, CheckCircle } from "lucide-react";
+
 import HeroSection from "./HeroSection";
 import AboutSection from "./AboutSection";
 import ServicesSection from "./ServicesSection";
@@ -8,7 +6,6 @@ import ProjectsSection from "./ProjectsSection";
 import TestimonialSection from "./TestimonialSection";
 import PricingSection from "./PricingSection";
 import MessageUsSection from "./MessageUsSection";
-import Footer from "../Shared/Footer/Footer";
 import CompanyLogoSlider from "./CompanyLogoSlider";
 import InvitationSection from "./InvitationSection";
 import useProtectedAxios from "../../Hooks/useProtectedAxios";
@@ -35,33 +32,33 @@ export default function HomePage() {
     fetchHomepageData();
   }, []);
 
+  const {whyChooseUs, logos, services, projects, pricingPlans, testimonials, inviteSection} = homepageData;
+
   return (
     <div className="flex flex-col">
       {/*  Hero Section */}
       <HeroSection/>
 
       {/*  About Section */}
-      <AboutSection/>
+      <AboutSection data={whyChooseUs} />
 
        {/* Company Logo Slider Section */}
-      <CompanyLogoSlider/>
+      <CompanyLogoSlider logos={logos} />
 
       {/*  Services Section */}
-     
-      <ServicesSection/>
+      <ServicesSection data={services} />
 
       {/*  Projects Section */}
-      <ProjectsSection/>
+      <ProjectsSection data={projects} />
 
       {/*  Testimonials Section */}
-     
-      <TestimonialSection/>
+      <TestimonialSection data={testimonials} />
 
       {/* pricing section */}
-      <PricingSection/>
+      <PricingSection data={pricingPlans} />
 
       {/* Invitation section */}
-      <InvitationSection/>
+      <InvitationSection data={inviteSection} />
 
       {/* message us section */}
       <MessageUsSection/>

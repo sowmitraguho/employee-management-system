@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { motion } from "framer-motion";
 import { FaUserTie, FaUsers, FaBuilding } from "react-icons/fa";
 
-const pricingPlans = [
+const staticPricingPlans = [
   {
     id: 1,
     title: "Basic",
@@ -37,8 +37,20 @@ const pricingPlans = [
     highlighted: false,
   },
 ];
+    
 
-export default function PricingSection() {
+export default function PricingSection({data}) {
+  const [pricingPlans, setPricingPlans] = useState(data || staticPricingPlans);
+  useEffect(() => {
+    setPricingPlans(data);
+  }, [data]);
+
+  const icons = {
+    FaUserTie : <FaUserTie className="text-indigo-500 w-10 h-10" />,
+    FaUsers: <FaUsers className="text-green-500 w-10 h-10" />,
+    FaBuilding: <FaBuilding className="text-pink-500 w-10 h-10" />,
+  }
+
   const settings = {
     dots: true,
     infinite: true,
@@ -86,7 +98,7 @@ export default function PricingSection() {
               >
                 {/* LEFT SECTION: Icon + Name + Price */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                  <div className="mb-4">{plan.icon}</div>
+                  <div className="mb-4">{icons[plan.icon]}</div>
                   <h3 className="text-2xl font-semibold">{plan.title}</h3>
                   <p
                     className={`text-3xl font-bold mt-2 ${

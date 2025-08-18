@@ -4,39 +4,47 @@ import { Card, CardContent } from "@/components/ui/card";
 import about from '../../assets/Lottifiles/about.json';
 import Lottie from "lottie-react";
 
-export default function AboutSection() {
-  const whyChooseUs = [
-  {
-    id: 1,
-    icon: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
-    title: "Proven Growth",
-    description:
-      "We focus on results that help your business grow consistently with data-driven strategies.",
-  },
-  {
-    id: 2,
-    icon: <FiClock className="text-green-500 w-12 h-12" />,
-    title: "Time Efficiency",
-    description:
-      "Save valuable time with our automated tools, seamless workflows, and smart integrations.",
-  },
-  {
-    id: 3,
-    icon: <FiShield className="text-red-500 w-12 h-12" />,
-    title: "Trusted Security",
-    description:
-      "Your data is safe with enterprise-grade security, encryption, and constant monitoring.",
-  },
-  {
-    id: 4,
-    icon: <FiSmile className="text-yellow-500 w-12 h-12" />,
-    title: "User Satisfaction",
-    description:
-      "We prioritize user-friendly solutions to ensure a smooth experience for everyone.",
-  },
-];
+export default function AboutSection({data}) {
+  console.log("AboutSection data:", data);
+  const icon = {
+    FiTrendingUp: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
+    FiClock: <FiClock className="text-green-500 w-12 h-12" />,
+    FiShield: <FiShield className="text-red-500 w-12 h-12" />,
+    FiSmile: <FiSmile className="text-yellow-500 w-12 h-12" />,
+  }
+  if(!data) return <h2 className="text-center text-gray-500">Loading...</h2>;
+
+//   {
+//     id: 1,
+//     icon: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
+//     title: "Proven Growth",
+//     description:
+//       "We focus on results that help your business grow consistently with data-driven strategies.",
+//   },
+//   {
+//     id: 2,
+//     icon: <FiClock className="text-green-500 w-12 h-12" />,
+//     title: "Time Efficiency",
+//     description:
+//       "Save valuable time with our automated tools, seamless workflows, and smart integrations.",
+//   },
+//   {
+//     id: 3,
+//     icon: <FiShield className="text-red-500 w-12 h-12" />,
+//     title: "Trusted Security",
+//     description:
+//       "Your data is safe with enterprise-grade security, encryption, and constant monitoring.",
+//   },
+//   {
+//     id: 4,
+//     icon: <FiSmile className="text-yellow-500 w-12 h-12" />,
+//     title: "User Satisfaction",
+//     description:
+//       "We prioritize user-friendly solutions to ensure a smooth experience for everyone.",
+//   },
+// ];
   return (
-    <section
+    <section  
       className="
         relative overflow-hidden
         bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-400  /* Light mode */
@@ -67,12 +75,12 @@ export default function AboutSection() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        {/* ✅ Title */}
+        {/*  Title */}
         <h2 className="text-3xl md:text-4xl font-bold text-white dark:text-gray-200 mb-6">
           Why Choose Us?
         </h2>
 
-        {/* ✅ Subtitle */}
+        {/*  Subtitle */}
         <motion.p
           className="text-lg text-gray-100 dark:text-gray-400 leading-relaxed"
           initial={{ opacity: 0 }}
@@ -84,7 +92,7 @@ export default function AboutSection() {
           Our platform is secure, scalable, and designed for teams of all sizes.
         </motion.p>
 
-        {/* ✅ Optional Icon/Divider */}
+        {/*  Optional Icon/Divider */}
         <motion.div
           className="mt-8 flex justify-center"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -99,7 +107,7 @@ export default function AboutSection() {
         <div className="grid md:grid-cols-2 gap-10 items-center">
           {/* Cards */}
           <div className="grid sm:grid-cols-2 gap-6 py-12">
-            {whyChooseUs.map((item, index) => (
+            {data.map((item, index) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 40 }}
@@ -108,7 +116,7 @@ export default function AboutSection() {
               >
                 <Card className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
                   <CardContent className="flex flex-col items-center text-center p-6">
-                    {item.icon}
+                    {icon[item.icon]}
                     <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                       {item.description}
@@ -121,7 +129,7 @@ export default function AboutSection() {
 
           {/* Reserved Lottie Animation Space */}
           <div className="flex justify-center items-center">
-            {/* 👉 Add your Lottie animation here */}
+            {/*  Add your Lottie animation here */}
             <div className="w-80 h-80 border-2 border-dashed rounded-2xl flex items-center justify-center text-muted-foreground">
               <Lottie animationData={about} loop={true} />
             </div>
