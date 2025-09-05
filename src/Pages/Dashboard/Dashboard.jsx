@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import Lottie from "lottie-react";
-import adminLottie from "../../assets/Lottifiles/admin.json";
-import {
-    PieChart, Pie, Cell, Tooltip,
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
-} from "recharts";
 import { useOutletContext } from "react-router";
 import useProtectedAxios from "../../Hooks/useProtectedAxios";
-import EmployeeProfile from "../EmployeeSection/EmployeeProfile/EmployeeProfile";
 import { useQuery } from "@tanstack/react-query";
 import HRDashboard from "./HRDashboard";
 import AdminDashboard from "./AdminDashboard";
+import Loader from "../../Components/Loader/Loader";
+import EmployeeProfile from "./EmployeeSection/EmployeeProfile/EmployeeProfile";
 
 
 // helper function to prepare stats for admin dashboard
@@ -21,12 +13,9 @@ const prepareAdminStats = (employees) => {
     const totalEmployees = employees.length;
     const verifiedCount = employees.filter(e => e.isVerified).length;
     const unverifiedCount = totalEmployees - verifiedCount;
-
     const activeCount = employees.filter(e => e.status === "active").length;
     const firedCount = employees.filter(e => e.status === "fired").length;
-
     const totalPayroll = employees.reduce((sum, e) => sum + Number(e.Salary || 0), 0);
-
     const roleCount = employees.reduce((acc, e) => {
         acc[e.role] = (acc[e.role] || 0) + 1;
         return acc;
@@ -50,9 +39,6 @@ const formatNumberShort = (num) => {
     return num.toString(); 
 };
 
-
-
-
 const COLORS = ["#4ade80", "#facc15", "#f87171", "#60a5fa"];
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -60,9 +46,7 @@ const Dashboard = () => {
 
     const [allEmployees, setAllEmployees] = useState([]);
     const [employees, setEmployees] = useState([]);
-
     const [stats, setStats] = useState(null);
-
     const { role } = useOutletContext();
 
     const {
@@ -82,10 +66,9 @@ const Dashboard = () => {
             const res2 = await useProtectedAxios.get(`${baseURL}/users?role=employee`, { withCredentials: true });
             setEmployees(res.data || []);
             setAllEmployees(res2.data || []);
-
-            const aggregated = await prepareAdminStats(res.data);
+            const aggregated = prepareAdminStats(res.data);
            // console.log('aggregated', aggregated);
-            await setStats(aggregated);
+            setStats(aggregated);
         } catch (err) {
             console.error("Error fetching employees:", err);
         }
@@ -96,7 +79,7 @@ const Dashboard = () => {
     }, []);
 
 
-    if (isLoading) return <p className="text-center">Loading Dashboard...</p>;
+    if (isLoading) return <Loader />;
     return (
         <div className="p-6 space-y-6">
             {role === "employee" && <EmployeeProfile />}

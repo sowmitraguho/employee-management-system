@@ -23,32 +23,32 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 2️⃣ Quick Links */}
+        {/*  Quick Links */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
           <ul className="space-y-2 text-gray-400">
             <li><a href="#services" className="hover:text-indigo-400 transition">Services</a></li>
             <li><a href="#pricing" className="hover:text-indigo-400 transition">Pricing</a></li>
             <li><a href="#testimonials" className="hover:text-indigo-400 transition">Testimonials</a></li>
-            <li><a href="#contact" className="hover:text-indigo-400 transition">Contact</a></li>
+            <li><a href="/contactus" className="hover:text-indigo-400 transition">Contact</a></li>
           </ul>
         </div>
 
-        {/* 3️⃣ Contact Info */}
+        {/*  Contact Info */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Contact Us</h3>
           <div className="flex items-center gap-3 mb-3">
-            <FaEnvelope className="text-indigo-400" /> support@company.com
+            <FaEnvelope className="text-indigo-400" /> support@apptechx.com
           </div>
           <div className="flex items-center gap-3 mb-3">
-            <FaPhoneAlt className="text-green-400" /> +1 (234) 567-890
+            <FaPhoneAlt className="text-green-400" /> +880 125650
           </div>
           <div className="flex items-center gap-3">
-            <FaMapMarkerAlt className="text-pink-400" /> 123 Business St, New York
+            <FaMapMarkerAlt className="text-pink-400" /> Dhaka, Bangladesh
           </div>
         </div>
 
-        {/* 4️⃣ Social Media */}
+        {/* Social Media */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Follow Us</h3>
           <div className="flex gap-4">

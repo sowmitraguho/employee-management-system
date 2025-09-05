@@ -8,6 +8,7 @@ import {
     PieChart, Pie, Cell, Tooltip,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from "recharts";
+import Loader from "../../Components/Loader/Loader";
 
 
 const salesData = [
@@ -33,7 +34,7 @@ const reviewData = [
 ];
 
 const AdminDashboard = ({ stats, formatNumberShort, COLORS }) => {
-    if (!stats) return <p className="text-center">Loading Dashboard...</p>;
+    if (!stats) return <Loader />;
     // Prepare data for charts
     const verificationData = [
         { name: "Verified", value: stats.verifiedCount },
@@ -43,6 +44,7 @@ const AdminDashboard = ({ stats, formatNumberShort, COLORS }) => {
     const statusData = [
         { name: "Active", value: stats.activeCount },
         { name: "Fired", value: stats.firedCount },
+        { name: "On Leave", value: stats.onLeaveCount || 0 },
     ];
 
     const roleData = Object.entries(stats.roleCount).map(([role, count]) => ({
@@ -64,9 +66,9 @@ const AdminDashboard = ({ stats, formatNumberShort, COLORS }) => {
     return (
 
         <div className="flex flex-col gap-4">
-            <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
+            {/* <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">
                 Admin Dashboard Overview
-            </h1>
+            </h1> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Total Employees Card */}
@@ -107,7 +109,10 @@ const AdminDashboard = ({ stats, formatNumberShort, COLORS }) => {
                 </Card>
 
             </div>
+            <div className="mt-2">
+                <h2 className="text-xl font-semibold text-white dark:text-gray-50 my-2 bg-blue-500 p-2">Monthly Stats</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2">
+                
                 {cardStats.map((item, i) => {
                     const Icon = item.icon;
                     return (
@@ -122,6 +127,7 @@ const AdminDashboard = ({ stats, formatNumberShort, COLORS }) => {
                         </Card>
                     );
                 })}
+            </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 

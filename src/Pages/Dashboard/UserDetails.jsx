@@ -27,7 +27,6 @@ const UserDetails = () => {
         performanceRating: currentUser?.performanceRating,
         salary: currentUser?.salary,
     });
-
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState(user);
     const [file, setFile] = useState(null);
@@ -37,7 +36,7 @@ const UserDetails = () => {
     };
 
     const handleImageUpload = async (imagefile) => {
-       // if (!file) return formData.image;
+        // if (!file) return formData.image;
 
         const form = new FormData();
         form.append("image", imagefile);
@@ -54,7 +53,7 @@ const UserDetails = () => {
 
     const handleSave = async () => {
         const uploadedImage = file;
-        const updatedUser = { ...formData, imageUrl: uploadedImage? uploadedImage : formData.imageUrl };
+        const updatedUser = { ...formData, imageUrl: uploadedImage ? uploadedImage : formData.imageUrl };
         console.log("Updated User:", updatedUser);
         const token = await loggedInUser.getIdToken(true);
         try {
@@ -72,15 +71,15 @@ const UserDetails = () => {
             setOpen(false);
         } catch (err) {
             console.error("Error updating user:", err.message, err.stack);
-            
+
         }
     };
 
 
 
     return (
-        <div className="max-w-7xl mx-auto my-12">
-            <Card className="dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto">
+            <Card className="rounded-[0px] dark:bg-gray-900">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-teal-500 text-transparent bg-clip-text">Your Details Information</CardTitle>
                     <Button variant="outline" onClick={() => setOpen(true)}>
@@ -93,24 +92,29 @@ const UserDetails = () => {
                         alt={user.name}
                         className="w-32 h-32 rounded-full object-cover border-2 border-indigo-500"
                     />
-                    <div className="text-xl space-y-2 text-gray-800 dark:text-gray-200">
-                        <p><span className="font-semibold">Name:</span> {user.name}</p>
-                        <p><span className="font-semibold">Email:</span> {user.email}</p>
-                        <p><span className="font-semibold">Phone:</span> {user.phone}</p>
-                        <p><span className="font-semibold">Address:</span> {user.address}</p>
-                        <p><span className="font-semibold">Joining Date:</span> {user.joiningDate}</p>
-                        <p><span className="font-semibold">Role:</span> {user.role}</p>
-                        <p><span className="font-semibold">Designation:</span> {user.designation}</p>
-                        <p><span className="font-semibold">Department:</span> {user.department}</p>
-                        <p><span className="font-semibold">Salary:</span> {user.salary}</p>
-                        <p><span className="font-semibold">Performance Rating:</span> {user.performanceRating}</p>
+                    <div className="text-xl space-y-2 grid grid-cols-1 md:grid-cols-6 items-center justify-around gap-4 text-gray-800 dark:text-gray-200 ">
+                        <div className="text-left col-span-4">
+                            <p><span className="font-semibold">Name:</span> {user.name}</p>
+                            <p><span className="font-semibold">Email:</span> {user.email}</p>
+                            <p><span className="font-semibold">Phone:</span> {user.phone}</p>
+                            <p><span className="font-semibold">Address:</span> {user.address}</p>
+                            <p><span className="font-semibold">Joining Date:</span> {user.joiningDate}</p>
+                        </div>
+                        <div className="text-left col-span-2">
+                            
+                            <p><span className="font-semibold">Role:</span> {user.role}</p>
+                            <p><span className="font-semibold">Designation:</span> {user.designation}</p>
+                            <p><span className="font-semibold">Department:</span> {user.department}</p>
+                            <p><span className="font-semibold">Salary:</span> {user.salary}</p>
+                            <p><span className="font-semibold">Performance Rating:</span> {user.performanceRating}</p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Edit Modal */}
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="dark:bg-gray-900 dark:text-gray-200">
+                <DialogContent className="max-h-[80vh] overflow-y-auto dark:bg-gray-900 dark:text-gray-200">
                     <DialogHeader>
                         <DialogTitle>Edit Profile</DialogTitle>
                     </DialogHeader>

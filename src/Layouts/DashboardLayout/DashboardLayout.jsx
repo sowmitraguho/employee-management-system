@@ -2,10 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import useAxiosGetData from "../../Hooks/useAxiosGetData";
 import Spinner from "../../Components/Spinner/Spinner";
-import DashboardSidebar from '../../Pages/Shared/DashboardSidebar/DashboardSidebar'
+import DashboardSidebar from '../../Pages/Dashboard/DashboardSidebar/DashboardSidebar'
 import UserProfile from "../../Pages/Dashboard/UserProfile";
 import { Outlet } from "react-router";
 import { set } from "date-fns";
+import Loader from "../../Components/Loader/Loader";
 
 const DashboardLayout = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -41,8 +42,7 @@ const DashboardLayout = () => {
   if (loadingRole)
     return (
       <div className="p-10 text-center">
-        Loading dashboard...
-        <Spinner/>
+       <Loader />
       </div>
     );
 
@@ -54,7 +54,7 @@ const DashboardLayout = () => {
 
       {/* Main Content should expand when sidebar is collapsed */}
       <main
-        className={`flex-1 p-4 bg-muted/40 dark:bg-gray-950 transition-all duration-300`}
+        className={`flex-1 bg-muted/40 dark:bg-gray-900 transition-all duration-300`}
       >
         {/* Optional: Place a top navbar with hamburger button */}
         <div className="md:hidden mb-4">
