@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import { Users, DollarSign, TrendingUp, RotateCcw, Download, ShoppingBag } from "lucide-react";

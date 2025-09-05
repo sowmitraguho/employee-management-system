@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { Home } from "lucide-react";
 import {
   FaChartBar,

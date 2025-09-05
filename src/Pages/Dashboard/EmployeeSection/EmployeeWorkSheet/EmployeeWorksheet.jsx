@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/Components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+import { Input } from "@/Components/ui/input";
 import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../../Contexts/AuthContext/AuthContext";

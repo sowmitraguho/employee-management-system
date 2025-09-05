@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { FiTrendingUp, FiClock, FiShield, FiSmile } from "react-icons/fi";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 import about from '../../../assets/Lottifiles/about.json';
 import Lottie from "lottie-react";
 

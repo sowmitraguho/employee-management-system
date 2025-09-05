@@ -11,7 +11,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import Spinner from "../../../../Components/Spinner/Spinner";
 import { motion } from "framer-motion";
 import { MdEmail } from "react-icons/md";

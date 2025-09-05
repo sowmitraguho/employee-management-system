@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle } from "@/Components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import { Button } from "@/Components/ui/button";
 import { Plus, Edit, Trash, Check } from "lucide-react";
 
 const initialTasks = [

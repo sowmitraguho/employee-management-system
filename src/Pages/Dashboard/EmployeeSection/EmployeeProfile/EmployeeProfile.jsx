@@ -4,9 +4,9 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
+} from "@/Components/ui/card"
+import { Badge } from "@/Components/ui/badge"
+import { Progress } from "@/Components/ui/progress"
 import {
   LineChart,
   Line,

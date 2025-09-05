@@ -5,13 +5,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
-} from "@/components/ui/card";
+} from "@/Components/ui/card";
 import {
   Table,
   TableHeader,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
+} from "@/Components/ui/table";
 import { format, isValid } from "date-fns";
 import useProtectedAxios from "../../../../Hooks/useProtectedAxios";
 import useAxiosGetData from "../../../../Hooks/useAxiosGetData";

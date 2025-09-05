@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import {Input } from "@/components/ui/input";
+import { Button } from "@/Components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/Components/ui/dialog";
+import {Input } from "@/Components/ui/input";
 import {
   Table,
   TableHeader,
@@ -10,11 +10,11 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
+} from "@/Components/ui/table";
 
 import { AuthContext } from "../../../../Contexts/AuthContext/AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/Components/ui/card";
 import { Grid, List } from "lucide-react";
 import Loader from "../../../../Components/Loader/Loader";
 import useProtectedAxios from "../../../../Hooks/useProtectedAxios";

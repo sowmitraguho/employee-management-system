@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import Lottie from "lottie-react";
 import animationData from "../../../assets/Lottifiles/user.json";
 import { useNavigate } from "react-router";

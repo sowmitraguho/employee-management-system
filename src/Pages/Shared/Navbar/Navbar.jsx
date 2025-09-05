@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar";
+} from "@/Components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu";
 import { AuthContext } from "../../../Contexts/AuthContext/AuthContext";
 import ThemeToggle from "../../../Components/ui/ThemeToggle";
 import { CompanyLogo } from "../../../Components/CompanyLogo/CompanyLogo";

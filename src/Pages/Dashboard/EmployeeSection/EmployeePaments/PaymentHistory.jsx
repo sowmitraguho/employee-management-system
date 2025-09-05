@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/Components/ui/table";
+import { Skeleton } from "@/Components/ui/skeleton";
 import { AuthContext } from "../../../../Contexts/AuthContext/AuthContext";
 import useProtectedAxios from "../../../../Hooks/useProtectedAxios";
 
