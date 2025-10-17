@@ -5,9 +5,9 @@ import Lottie from "lottie-react";
 import animationData from "../../../assets/Lottifiles/user.json";
 import { useNavigate } from "react-router";
 
-const InvitationSection = ({data}) => {
+const InvitationSection = () => {
     const navigation = useNavigate();
-    console.log('data of invitation', data)
+    
     return (
         <section className="min-h-screen md:px-20 py-16 px-8 bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between border border-gray-100 p-12 rounded-lg max-w-7xl mx-auto shadow-lg">

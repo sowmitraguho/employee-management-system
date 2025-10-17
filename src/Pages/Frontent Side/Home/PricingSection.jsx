@@ -39,17 +39,8 @@ const staticPricingPlans = [
 ];
     
 
-export default function PricingSection({data}) {
-  const [pricingPlans, setPricingPlans] = useState(data || staticPricingPlans);
-  useEffect(() => {
-    setPricingPlans(data);
-  }, [data]);
-
-  const icons = {
-    FaUserTie : <FaUserTie className="text-indigo-500 w-10 h-10" />,
-    FaUsers: <FaUsers className="text-green-500 w-10 h-10" />,
-    FaBuilding: <FaBuilding className="text-pink-500 w-10 h-10" />,
-  }
+export default function PricingSection() {
+  
 
   const settings = {
     dots: true,
@@ -78,7 +69,7 @@ export default function PricingSection({data}) {
 
         {/* Carousel */}
         <Slider {...settings}>
-          {pricingPlans.map((plan, index) => (
+          {staticPricingPlans.map((plan, index) => (
             <motion.div
               key={plan.id}
               initial={{ opacity: 0, y: 30 }}
@@ -98,7 +89,7 @@ export default function PricingSection({data}) {
               >
                 {/* LEFT SECTION: Icon + Name + Price */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                  <div className="mb-4">{icons[plan.icon]}</div>
+                  <div className="mb-4">{plan.icon}</div>
                   <h3 className="text-2xl font-semibold">{plan.title}</h3>
                   <p
                     className={`text-3xl font-bold mt-2 ${

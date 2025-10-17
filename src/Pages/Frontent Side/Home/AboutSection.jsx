@@ -4,45 +4,37 @@ import { Card, CardContent } from "@/Components/ui/card";
 import about from '../../../assets/Lottifiles/about.json';
 import Lottie from "lottie-react";
 
-export default function AboutSection({data}) {
-  console.log("AboutSection data:", data);
-  const icon = {
-    FiTrendingUp: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
-    FiClock: <FiClock className="text-green-500 w-12 h-12" />,
-    FiShield: <FiShield className="text-red-500 w-12 h-12" />,
-    FiSmile: <FiSmile className="text-yellow-500 w-12 h-12" />,
-  }
-  if(!data) return <h2 className="text-center text-gray-500">Loading...</h2>;
+export default function AboutSection() {
 
-//   {
-//     id: 1,
-//     icon: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
-//     title: "Proven Growth",
-//     description:
-//       "We focus on results that help your business grow consistently with data-driven strategies.",
-//   },
-//   {
-//     id: 2,
-//     icon: <FiClock className="text-green-500 w-12 h-12" />,
-//     title: "Time Efficiency",
-//     description:
-//       "Save valuable time with our automated tools, seamless workflows, and smart integrations.",
-//   },
-//   {
-//     id: 3,
-//     icon: <FiShield className="text-red-500 w-12 h-12" />,
-//     title: "Trusted Security",
-//     description:
-//       "Your data is safe with enterprise-grade security, encryption, and constant monitoring.",
-//   },
-//   {
-//     id: 4,
-//     icon: <FiSmile className="text-yellow-500 w-12 h-12" />,
-//     title: "User Satisfaction",
-//     description:
-//       "We prioritize user-friendly solutions to ensure a smooth experience for everyone.",
-//   },
-// ];
+ const data = [{
+    id: 1,
+    icon: <FiTrendingUp className="text-indigo-500 w-12 h-12" />,
+    title: "Proven Growth",
+    description:
+      "We focus on results that help your business grow consistently with data-driven strategies.",
+  },
+  {
+    id: 2,
+    icon: <FiClock className="text-green-500 w-12 h-12" />,
+    title: "Time Efficiency",
+    description:
+      "Save valuable time with our automated tools, seamless workflows, and smart integrations.",
+  },
+  {
+    id: 3,
+    icon: <FiShield className="text-red-500 w-12 h-12" />,
+    title: "Trusted Security",
+    description:
+      "Your data is safe with enterprise-grade security, encryption, and constant monitoring.",
+  },
+  {
+    id: 4,
+    icon: <FiSmile className="text-yellow-500 w-12 h-12" />,
+    title: "User Satisfaction",
+    description:
+      "We prioritize user-friendly solutions to ensure a smooth experience for everyone.",
+  },
+];
   return (
     <section  
       className="
@@ -116,7 +108,7 @@ export default function AboutSection({data}) {
               >
                 <Card className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
                   <CardContent className="flex flex-col items-center text-center p-6">
-                    {icon[item.icon]}
+                    {item.icon}
                     <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                       {item.description}

@@ -97,6 +97,7 @@ export default function ContactUs() {
               </form>
             </CardContent>
           </Card>
+          
         </motion.div>
       </section>
     </div>
