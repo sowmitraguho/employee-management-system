@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../../../Contexts/AuthContext/AuthContext";
+import useProtectedAxios from "../../../../Hooks/useProtectedAxios";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -14,33 +15,33 @@ function PaymentForm({ payrollId, amount, employeeId, onClose, refetchPayroll })
   const stripe = useStripe();
   const elements = useElements();
   const baseURL = import.meta.env.VITE_API_URL;
-  const {loggedInUser} = useContext(AuthContext);
+  const { loggedInUser } = useContext(AuthContext);
 
   //  Mutation for Admin → Approve/Reject payroll
-    const updatePayrollStatus = useMutation({
-        mutationFn: async ({ id, status }) => {
-            const token = await loggedInUser.getIdToken( true);
-            const res = await axios.patch(`${baseURL}/payroll/${id}`, { status }, {
-                withCredentials: true,
-                headers: {
-                    Authorization: `Bearer ${token}`, //  Attach token here
-                },
-            });
-            console.log('update payrollstatus mutation: ', res);
-            return res.json();
+  const updatePayrollStatus = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const token = await loggedInUser.getIdToken(true);
+      const res = await useProtectedAxios.patch(`${baseURL}/payments/${id}`, { status }, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`, //  Attach token here
         },
-        onSuccess: () => {
-            // toast({ title: "Payroll updated " });
-            QueryClient.invalidateQueries(["payroll"]);
-        },
-    });
+      });
+      console.log('update payrollstatus mutation: ', res);
+      return res.json();
+    },
+    onSuccess: () => {
+      // toast({ title: "Payroll updated " });
+      QueryClient.invalidateQueries(["payroll"]);
+    },
+  });
 
   const handlePayment = async () => {
     if (!stripe || !elements) return;
 
     try {
       //  1. Create PaymentIntent
-      const res = await axios.post(`${baseURL}/makepayment/create-payment-intent`, {
+      const res = await useProtectedAxios.post(`${baseURL}/payments/create-payment-intent`, {
         amount,
         employeeId,
         payrollId,

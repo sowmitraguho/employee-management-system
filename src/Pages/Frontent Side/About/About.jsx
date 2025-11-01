@@ -18,9 +18,8 @@ export default function AboutUs() {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-       // const res = await fetch(`${import.meta.env.VITE_API_URL}/users`); // Replace with your API
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/teams`);
-        console.log(res.data);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/public`);
+        //console.log(res.data);
         setTeam(res.data);
       } catch (error) {
         console.error("Error fetching team:", error);

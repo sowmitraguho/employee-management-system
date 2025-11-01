@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import { MdEmail } from "react-icons/md";
 import { MdAccountBalance } from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa";
+import useProtectedAxios from "../../../../Hooks/useProtectedAxios";
 
 
 
@@ -41,9 +42,8 @@ const EmployeeDetails = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${email}`);
-        const data = await res.json();
-        setEmployee(data);
+        const res = await useProtectedAxios.get(`${import.meta.env.VITE_API_URL}/users/${email}`);
+        setEmployee(res.data);
       } catch (error) {
         console.error("Error fetching employee details:", error);
       } finally {
@@ -53,9 +53,8 @@ const EmployeeDetails = () => {
 
     const fetchEmployeeHistory = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/payments/${email}`);
-        const data = await res.json();
-        setEmployeeSalaryHistory(data);
+        const res = await useProtectedAxios.get(`${import.meta.env.VITE_API_URL}/payments/${email}`);
+        setEmployeeSalaryHistory(res.data);
       } catch (error) {
         console.error("Error fetching salary history:", error);
       }

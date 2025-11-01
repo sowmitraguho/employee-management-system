@@ -8,11 +8,12 @@ import { Upload, Edit } from "lucide-react";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import { useOutletContext } from "react-router";
 import axios from "axios";
+import useProtectedAxios from "../../Hooks/useProtectedAxios";
 
 const UserDetails = () => {
     const { loggedInUser } = useContext(AuthContext);
     const { currentUser } = useOutletContext();
-    console.log('from user details', currentUser);
+    //console.log('from user details', currentUser);
     const baseURL = import.meta.env.VITE_API_URL;
     const [user, setUser] = useState({
         imageUrl: currentUser?.imageUrl,
@@ -46,7 +47,7 @@ const UserDetails = () => {
             body: form,
         });
         const data = await res.json();
-        console.log(data.data.display_url);
+        //console.log(data.data.display_url);
         setFile(data.data.display_url);
         return data.data.display_url;
     };
@@ -54,11 +55,11 @@ const UserDetails = () => {
     const handleSave = async () => {
         const uploadedImage = file;
         const updatedUser = { ...formData, imageUrl: uploadedImage ? uploadedImage : formData.imageUrl };
-        console.log("Updated User:", updatedUser);
+        //console.log("Updated User:", updatedUser);
         const token = await loggedInUser.getIdToken(true);
         try {
-            await axios.patch(
-                `${baseURL}/vfusers/${currentUser._id}`,
+            await useProtectedAxios.patch(
+                `${baseURL}/users/${currentUser._id}`,
                 updatedUser,
                 {
                     withCredentials: true,
@@ -101,7 +102,7 @@ const UserDetails = () => {
                             <p><span className="font-semibold">Joining Date:</span> {user.joiningDate}</p>
                         </div>
                         <div className="text-left col-span-2">
-                            
+
                             <p><span className="font-semibold">Role:</span> {user.role}</p>
                             <p><span className="font-semibold">Designation:</span> {user.designation}</p>
                             <p><span className="font-semibold">Department:</span> {user.department}</p>

@@ -41,7 +41,7 @@ export default function AdminEmployeesPage() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`);
+      const res = await useProtectedAxios.get(`${baseURL}/users/verified`);
       setEmployees(res.data || []);
     } catch (err) {
       console.error("Error fetching employees:", err);
@@ -58,7 +58,7 @@ export default function AdminEmployeesPage() {
     mutationFn: async (email) => {
       const token = await loggedInUser.getIdToken(true);
       const res = await axios.patch(
-        `${baseURL}/payroll/${email}`,
+        `${baseURL}/payments/${email}`,
         { employeeStatus: "fired" },
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
@@ -70,7 +70,7 @@ export default function AdminEmployeesPage() {
     const token = await loggedInUser.getIdToken(true);
     try {
       await axios.patch(
-        `${baseURL}/vfusers/${user._id}/fire`,
+        `${baseURL}/users/${user._id}/fire`,
         {},
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
@@ -87,7 +87,7 @@ export default function AdminEmployeesPage() {
   const makeHR = async (userId) => {
     const token = await loggedInUser.getIdToken(true);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/makeHR`, {}, {
+      await axios.patch(`${baseURL}/users/${userId}/makeHR`, {}, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -115,7 +115,7 @@ export default function AdminEmployeesPage() {
     const token = await loggedInUser.getIdToken(true);
     console.log("Token acquired for salary update.", token);
     try {
-      await axios.patch(`${baseURL}/vfusers/${userId}/salary`, { Salary: Number(newSalary) }, {
+      await axios.patch(`${baseURL}/users/${userId}/salary`, { Salary: Number(newSalary) }, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       });

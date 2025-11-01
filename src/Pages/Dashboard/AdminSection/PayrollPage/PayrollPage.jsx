@@ -30,7 +30,7 @@ export default function PayrollPage() {
   } = useQuery({
     queryKey: ["payroll"],
     queryFn: async () => {
-      const res = await useProtectedAxios.get(`${baseURL}/payroll`);
+      const res = await useProtectedAxios.get(`${baseURL}/payments`);
       return res.data;
     },
   });
@@ -50,7 +50,7 @@ export default function PayrollPage() {
     mutationFn: async ({ id, status }) => {
       const token = await loggedInUser.getIdToken(true);
       const res = await axios.patch(
-        `${baseURL}/payroll/${id}`,
+        `${baseURL}/payments/${id}`,
         { status },
         {
           withCredentials: true,
@@ -143,8 +143,9 @@ export default function PayrollPage() {
                         </span>
                       </TableCell>
                       <TableCell>
-                        {record.paymentDate
-                          ? new Date(record.paymentDate).toLocaleDateString()
+                        {record.approvedAt
+
+                          ? new Date(record.approvedAt).toLocaleDateString()
                           : "-"}
                       </TableCell>
                       <TableCell>

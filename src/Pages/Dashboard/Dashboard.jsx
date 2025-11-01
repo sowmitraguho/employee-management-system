@@ -56,13 +56,13 @@ const Dashboard = () => {
     } = useQuery({
         queryKey: ["payroll"],
         queryFn: async () => {
-            const res = await useProtectedAxios.get(`${baseURL}/payroll`);
+            const res = await useProtectedAxios.get(`${baseURL}/payments`);
             return res.data;
         },
     });
     const fetchEmployees = async () => {
         try {
-            const res = await useProtectedAxios.get(`${baseURL}/vfusers/verified`, { withCredentials: true });
+            const res = await useProtectedAxios.get(`${baseURL}/users/verified`, { withCredentials: true });
             const res2 = await useProtectedAxios.get(`${baseURL}/users?role=employee`, { withCredentials: true });
             setEmployees(res.data || []);
             setAllEmployees(res2.data || []);

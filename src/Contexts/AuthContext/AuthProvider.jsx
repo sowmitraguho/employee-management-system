@@ -14,19 +14,27 @@ const AuthProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState(auth.currentUser);
 
     const sendTokenToBackend = async (firebaseUser) => {
-        const userToken = await firebaseUser.getIdToken();
-        //console.log('userToken', userToken);
-        localStorage.setItem("authToken", userToken);
-        document.cookie = `authToken=${userToken}; path=/; max-age=604800; Secure; SameSite=Strict`;
-        // Send token to backend
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {
-            headers: {
-                Authorization: `Bearer ${userToken}`,
-            },
-        });
-        //console.log("Backend response:", res.data);
+  try {
+    const userToken = await firebaseUser.getIdToken();
+    console.log("userToken", userToken);
 
-    }
+    // Local storage
+    localStorage.setItem("authToken", userToken);
+
+    // Cookie (remove Secure for local dev)
+    document.cookie = `authToken=${userToken}; path=/; max-age=604800; SameSite=Strict`;
+
+    // Send token to backend
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {
+      headers: { Authorization: `Bearer ${userToken}` },
+    });
+
+    //console.log("Backend response:", res.data);
+  } catch (err) {
+    console.error("Error sending token to backend:", err);
+  }
+};
+
 
     const createUser = (email, password) => {
         setLoading(true);
@@ -54,7 +62,7 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        const UnSubscribe = onAuthStateChanged(auth, async(currentUser) => {
+        const UnSubscribe = onAuthStateChanged(auth, async (currentUser) => {
             //console.log('inside useeffect after auth state changed', currentUser);
             setLoggedInUser(currentUser);
             //setLoading(false);

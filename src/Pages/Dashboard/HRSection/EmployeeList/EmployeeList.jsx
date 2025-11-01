@@ -24,23 +24,18 @@ const fetchEmployees = async () => {
 };
 
 const toggleVerified = async (userId, newStatus) => {
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/users/${userId}`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isVerified: newStatus }),
-    }
-  );
+  const res = await useProtectedAxios.patch(
+      `${import.meta.env.VITE_API_URL}/users/${userId}`,
+      { isVerified: newStatus }, // request body
+    );
   return res.json();
 };
 
 const createPayrollRequest = async (requestData) => {
   try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/payroll/request`,
-      requestData,
-      { headers: { "Content-Type": "application/json" } }
+    const res = await useProtectedAxios.post(
+      `${import.meta.env.VITE_API_URL}/payments/request`,
+      requestData
     );
     return res.data;
   } catch (error) {
@@ -78,7 +73,7 @@ export default function EmployeeList() {
   } = useQuery({
     queryKey: ["payroll"],
     queryFn: async () => {
-      const res = await useProtectedAxios.get(`${baseURL}/payroll`);
+      const res = await useProtectedAxios.get(`${baseURL}/payments`);
       return res.data;
     },
   });
