@@ -50,7 +50,7 @@ const DashboardLayout = () => {
     <div className="min-h-screen flex">
       {/* Sidebar */}
       
-      <DashboardSidebar role={role} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <DashboardSidebar role={role} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} className="fixed top-0 left-0 z-50"/>
 
       {/* Main Content should expand when sidebar is collapsed */}
       <main

@@ -31,6 +31,7 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { signIn, googleSignIn } = useContext(AuthContext);
+  const [role, setRole] = useState("admin");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -41,7 +42,7 @@ const SignIn = () => {
     setError("");
 
     try {
-      const result = await signIn(form.email, form.password);
+      const result = await signIn(loginData[role].email, loginData[role].password);
       const currentUser = result.user;
       if (currentUser) {
         await Swal.fire({
@@ -93,25 +94,40 @@ const SignIn = () => {
         </div>
 
         {/* Right - Form */}
-        <form
+        <div className="flex flex-col space-y-2 px-4 py-2">
+           <div className="flex space-x-2">
+             <Button
+            variant="outline"
+            onClick={() => setRole("admin")}
+            className="w-1/3"
+          >
+            Admin
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setRole("hr")}
+            className="w-1/3"
+          >
+            HR
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setRole("employee")}
+            className="w-1/3"
+          >
+            Employee
+          </Button>
+           </div>
+          <div>
+            <form
           onSubmit={handleSubmit}
           className="p-8 flex flex-col justify-center space-y-6"
           noValidate
         >
-          <select
-            name="role"
-            id="role"
-            onChange={handleChange}
-            className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          >
-            <option value="admin">Admin</option>
-            <option value="hr">HR</option>
-            <option value="employee">Employee</option>
-          </select>
           <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100">
             Sign In
           </h2>
-
+          
           {error && (
             <p className="text-center text-red-500 text-sm font-medium">{error}</p>
           )}
@@ -126,8 +142,8 @@ const SignIn = () => {
               id="email"
               required
               onChange={handleChange}
-              placeholder={loginData[form.role].email}
-              value={loginData[form.role].email}
+              placeholder={loginData[role].email}
+              value={loginData[role].email}
               className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
@@ -142,8 +158,8 @@ const SignIn = () => {
               id="password"
               required
               onChange={handleChange}
-              placeholder={loginData[form.role].password}
-              value={loginData[form.role].password}
+              placeholder={loginData[role].password}
+              value={loginData[role].password}
               className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
@@ -185,6 +201,9 @@ const SignIn = () => {
             </Link>
           </p>
         </form>
+          </div>
+          </div>
+        
       </motion.div>
     </div>
   );
