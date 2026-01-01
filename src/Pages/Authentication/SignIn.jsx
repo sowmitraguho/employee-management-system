@@ -11,6 +11,21 @@ import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 
+const loginData = {
+  admin: {
+    email: "eagletheboss@eagle.com",
+    password: "@Eagleboss123",
+},
+  hr: {
+    email: "natasha@woman.com",
+    password: "@Natasha123",
+},
+  employee: {
+    email: "sumona@datta.com",
+    password: "@Sumona123",
+} 
+}
+
 const SignIn = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -83,6 +98,16 @@ const SignIn = () => {
           className="p-8 flex flex-col justify-center space-y-6"
           noValidate
         >
+          <select
+            name="role"
+            id="role"
+            onChange={handleChange}
+            className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          >
+            <option value="admin">Admin</option>
+            <option value="hr">HR</option>
+            <option value="employee">Employee</option>
+          </select>
           <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100">
             Sign In
           </h2>
@@ -101,7 +126,8 @@ const SignIn = () => {
               id="email"
               required
               onChange={handleChange}
-              placeholder="you@example.com"
+              placeholder={loginData[form.role].email}
+              value={loginData[form.role].email}
               className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
@@ -116,7 +142,8 @@ const SignIn = () => {
               id="password"
               required
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder={loginData[form.role].password}
+              value={loginData[form.role].password}
               className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
