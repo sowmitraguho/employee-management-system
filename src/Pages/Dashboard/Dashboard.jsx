@@ -81,7 +81,7 @@ const Dashboard = () => {
 
     if (isLoading) return <Loader />;
     return (
-        <div className="p-6 space-y-6">
+        <div className="">
             {role === "employee" && <EmployeeProfile />}
             {role === "hr" && <HRDashboard allEmployees={allEmployees} payrollData={payrollData} />}
             {role === "admin" && <AdminDashboard stats={stats} formatNumberShort={formatNumberShort} COLORS={COLORS} />}
